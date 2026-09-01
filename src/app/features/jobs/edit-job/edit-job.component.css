@@ -1,0 +1,49 @@
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: var(--slate-500);
+  font-size: 1rem;
+}
+
+.form-card {
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+}
+
+@media (max-width: 576px) {
+  .form-card {
+    padding: 1.25rem;
+  }
+}
+
+.skills-chips-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.active-chip {
+  background-color: var(--primary-light);
+  color: var(--primary);
+  border-color: #c7d2fe;
+}
+
+.chip-remove {
+  cursor: pointer;
+  margin-left: 0.25rem;
+  transition: var(--transition);
+}
+
+.chip-remove:hover {
+  color: var(--danger);
+}
+
+.form-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1rem;
+}

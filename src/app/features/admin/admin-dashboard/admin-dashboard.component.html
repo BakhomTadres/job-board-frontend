@@ -1,25 +1,123 @@
-<div class="container section-padding">
-  <div class="mb-4">
-    <h1 class="page-title">Admin Dashboard</h1>
-    <p class="page-subtitle">Overview of platform metrics and listings.</p>
+<div class="admin-dashboard-page container section-padding">
+  <div class="page-header d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h1 class="page-title">Administrator Console</h1>
+        <span class="badge badge-warning">Admin Access</span>
+      </div>
+      <p class="page-subtitle">Platform overview, system metrics, and complete job management.</p>
+    </div>
+    <div class="d-flex gap-2">
+      <a routerLink="/jobs/create" class="btn btn-primary">
+        <i class="fa-solid fa-plus"></i> Post Platform Job
+      </a>
+      <a routerLink="/pricing" class="btn btn-secondary">
+        <i class="fa-solid fa-credit-card"></i> Payment Gateway
+      </a>
+    </div>
   </div>
 
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-
-  <ng-container *ngIf="!isLoading">
-    <div class="grid-3 mb-4">
-      <div class="card p-4">
-        <h3 class="text-sm font-bold text-muted uppercase">Active Job Postings</h3>
-        <p class="font-bold text-2xl text-primary mt-2">{{ totalJobs }}</p>
+  <!-- Stat Cards Grid -->
+  <div class="grid-4 stats-cards-grid mb-4">
+    <div class="card stat-widget">
+      <div class="stat-widget-icon bg-indigo">
+        <i class="fa-solid fa-briefcase"></i>
       </div>
-      <div class="card p-4">
-        <h3 class="text-sm font-bold text-muted uppercase">Payment Gateway</h3>
-        <p class="font-bold text-2xl text-success mt-2">Paymob Active</p>
-      </div>
-      <div class="card p-4">
-        <h3 class="text-sm font-bold text-muted uppercase">System Status</h3>
-        <p class="font-bold text-2xl text-info mt-2">Healthy</p>
+      <div class="stat-widget-content">
+        <span class="stat-val">{{ totalJobsCount }}</span>
+        <span class="stat-name">Active Job Listings</span>
       </div>
     </div>
-  </ng-container>
+
+    <div class="card stat-widget">
+      <div class="stat-widget-icon bg-emerald">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="stat-widget-content">
+        <span class="stat-val">{{ totalApplicationsEstimate }}</span>
+        <span class="stat-name">Total Applications</span>
+      </div>
+    </div>
+
+    <div class="card stat-widget">
+      <div class="stat-widget-icon bg-sky">
+        <i class="fa-solid fa-building-user"></i>
+      </div>
+      <div class="stat-widget-content">
+        <span class="stat-val">120+</span>
+        <span class="stat-name">Registered Employers</span>
+      </div>
+    </div>
+
+    <div class="card stat-widget">
+      <div class="stat-widget-icon bg-amber">
+        <i class="fa-solid fa-shield-halved"></i>
+      </div>
+      <div class="stat-widget-content">
+        <span class="stat-val">100%</span>
+        <span class="stat-name">System Health</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <app-loading-spinner *ngIf="isLoading" message="Fetching administrative records..."></app-loading-spinner>
+
+  <!-- Error state -->
+  <div class="alert alert-danger" *ngIf="hasError && !isLoading">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <div>Failed to load administrative data. <button class="btn btn-sm btn-outline-danger" (click)="fetchDashboardData()">Retry</button></div>
+  </div>
+
+  <!-- Recent Postings Table -->
+  <div class="card overflow-hidden mt-4" *ngIf="!isLoading && !hasError">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h3 class="card-table-title">All System Job Openings</h3>
+      <span class="text-muted text-sm">{{ jobs.length }} listings loaded</span>
+    </div>
+
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Salary</th>
+            <th class="text-right">Admin Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let job of jobs">
+            <td>
+              <a [routerLink]="['/jobs', job._id || job.id]" class="font-bold text-slate-900">
+                {{ job.title }}
+              </a>
+            </td>
+            <td>{{ job.companyName }}</td>
+            <td><span class="badge badge-primary">{{ job.type }}</span></td>
+            <td>{{ job.location }}</td>
+            <td>{{ job.salary ? ('$' + job.salary.toLocaleString()) : 'Negotiable' }}</td>
+            <td>
+              <div class="d-flex justify-content-end gap-2">
+                <a [routerLink]="['/jobs', job._id || job.id, 'applications']" class="btn btn-sm btn-primary">
+                  <i class="fa-solid fa-users"></i>
+                </a>
+                <a [routerLink]="['/jobs', job._id || job.id, 'edit']" class="btn btn-sm btn-secondary">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="deleteJob(job._id || job.id)">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
