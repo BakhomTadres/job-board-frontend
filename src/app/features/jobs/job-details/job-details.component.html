@@ -1,0 +1,261 @@
+<div class="job-details-page">
+  <!-- Loading state -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading job opening details..." [fullPage]="true"></app-loading-spinner>
+
+  <!-- Error state -->
+  <div class="container section-padding" *ngIf="hasError && !isLoading">
+    <div class="alert alert-danger">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <div>
+        <strong>Job Not Found</strong>
+        <p class="mb-2">The job posting you are looking for does not exist or has been removed.</p>
+        <a routerLink="/jobs" class="btn btn-sm btn-primary">Browse All Jobs</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" *ngIf="!isLoading && !hasError && job">
+    <!-- Breadcrumbs -->
+    <nav class="breadcrumbs-nav">
+      <a routerLink="/">Home</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <a routerLink="/jobs">Jobs</a>
+      <i class="fa-solid fa-chevron-right"></i>
+      <span>{{ job.title }}</span>
+    </nav>
+
+    <!-- Header Hero Card -->
+    <div class="card job-header-card mb-4">
+      <div class="job-header-flex">
+        <div class="company-large-badge">
+          <i class="fa-regular fa-building"></i>
+        </div>
+
+        <div class="header-main-details">
+          <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+            <span class="company-heading">{{ job.companyName }}</span>
+            <span class="badge badge-primary">{{ job.type }}</span>
+            <span *ngIf="matchScore !== null" class="match-score-pill" [ngClass]="{
+              'match-high': matchScore >= 70,
+              'match-medium': matchScore >= 40 && matchScore < 70,
+              'match-low': matchScore < 40
+            }">
+              <i class="fa-solid fa-bolt"></i> {{ matchScore }}% Skills Match
+            </span>
+          </div>
+
+          <h1 class="job-main-title">{{ job.title }}</h1>
+
+          <div class="job-meta-row">
+            <div class="job-meta-item">
+              <i class="fa-solid fa-location-dot"></i>
+              <span>{{ job.location }}</span>
+            </div>
+            <div class="job-meta-item">
+              <i class="fa-solid fa-money-bill-wave"></i>
+              <span class="salary-text">{{ getSalaryFormatted(job.salary) }}</span>
+            </div>
+            <div class="job-meta-item" *ngIf="job.createdAt">
+              <i class="fa-regular fa-calendar"></i>
+              <span>Posted {{ job.createdAt | date:'mediumDate' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action CTA buttons -->
+        <div class="header-cta-actions">
+          <button
+            *ngIf="!isOwner && !hasApplied"
+            class="btn btn-primary btn-lg apply-header-btn"
+            (click)="openApplyModal()">
+            <i class="fa-solid fa-paper-plane"></i> Apply Now
+          </button>
+
+          <div *ngIf="hasApplied" class="applied-badge">
+            <i class="fa-solid fa-circle-check"></i> Applied
+          </div>
+
+          <!-- Owner actions -->
+          <div *ngIf="isOwner" class="d-flex gap-2">
+            <a [routerLink]="['/jobs', job._id || job.id, 'edit']" class="btn btn-secondary">
+              <i class="fa-regular fa-pen-to-square"></i> Edit Job
+            </a>
+            <a [routerLink]="['/jobs', job._id || job.id, 'applications']" class="btn btn-primary">
+              <i class="fa-solid fa-users"></i> View Applicants
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Layout Grid -->
+    <div class="details-grid-layout">
+      <!-- Left Column: Description & Details -->
+      <div class="details-main-column">
+        <div class="card mb-4">
+          <h2 class="section-card-title">Job Description</h2>
+          <div class="job-body-text">
+            <p class="description-paragraph" *ngFor="let p of job.description.split('\n')">
+              {{ p }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Required Skills & Technologies -->
+        <div class="card mb-4" *ngIf="job.skills && job.skills.length > 0">
+          <h2 class="section-card-title">Skills & Technologies</h2>
+          <div class="skills-chips-large">
+            <span class="skill-tag-large" *ngFor="let skill of job.skills">
+              <i class="fa-solid fa-check text-primary"></i> {{ skill }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Sidebar Info Card -->
+      <aside class="details-sidebar-column">
+        <div class="card sidebar-card mb-4">
+          <h3 class="sidebar-card-title">Job Overview</h3>
+          <ul class="overview-list">
+            <li class="overview-item">
+              <div class="overview-icon"><i class="fa-regular fa-calendar-check"></i></div>
+              <div>
+                <span class="overview-label">Employment Type</span>
+                <span class="overview-val">{{ job.type }}</span>
+              </div>
+            </li>
+            <li class="overview-item">
+              <div class="overview-icon"><i class="fa-solid fa-location-crosshairs"></i></div>
+              <div>
+                <span class="overview-label">Location</span>
+                <span class="overview-val">{{ job.location }}</span>
+              </div>
+            </li>
+            <li class="overview-item">
+              <div class="overview-icon"><i class="fa-solid fa-wallet"></i></div>
+              <div>
+                <span class="overview-label">Offered Salary</span>
+                <span class="overview-val">{{ getSalaryFormatted(job.salary) }}</span>
+              </div>
+            </li>
+            <li class="overview-item" *ngIf="job.createdAt">
+              <div class="overview-icon"><i class="fa-regular fa-clock"></i></div>
+              <div>
+                <span class="overview-label">Date Posted</span>
+                <span class="overview-val">{{ job.createdAt | date:'mediumDate' }}</span>
+              </div>
+            </li>
+          </ul>
+
+          <div class="sidebar-apply-btn mt-4">
+            <button
+              *ngIf="!isOwner && !hasApplied"
+              class="btn btn-primary btn-block btn-lg"
+              (click)="openApplyModal()">
+              <i class="fa-solid fa-paper-plane"></i> Apply for this position
+            </button>
+            <div *ngIf="hasApplied" class="alert alert-success text-center mb-0">
+              <i class="fa-solid fa-check"></i> Application Submitted!
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Similar Jobs Section (for authenticated job seekers) -->
+    <section class="similar-jobs-section" *ngIf="similarJobs.length > 0">
+      <div class="similar-jobs-header">
+        <div>
+          <span class="similar-section-subheading">Based on This Job</span>
+          <h2 class="similar-section-title">Similar Jobs You Might Like</h2>
+        </div>
+        <a routerLink="/jobs" class="btn btn-outline btn-sm">
+          Explore More <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+
+      <div class="similar-jobs-grid">
+        <app-job-card
+          *ngFor="let sJob of similarJobs"
+          [job]="sJob">
+        </app-job-card>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- Application Modal Dialog -->
+<div class="modal-backdrop" *ngIf="isApplyModalOpen" (click)="closeApplyModal()">
+  <div class="modal-dialog application-modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h3 class="modal-title">Apply to {{ job?.companyName }}</h3>
+        <p class="modal-subtitle">Position: {{ job?.title }}</p>
+      </div>
+      <button class="modal-close-btn" (click)="closeApplyModal()" aria-label="Close apply dialog">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <form [formGroup]="applyForm" (ngSubmit)="submitApplication()">
+      <div class="modal-body">
+        <!-- Applicant Name -->
+        <div class="form-group">
+          <label class="form-label" for="applicantName">Full Name</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-user"></i>
+            <input
+              type="text"
+              id="applicantName"
+              class="form-control"
+              formControlName="applicantName"
+              placeholder="e.g. Jane Smith"
+              [ngClass]="{ 'is-invalid': applyForm.get('applicantName')?.touched && applyForm.get('applicantName')?.invalid }">
+          </div>
+          <div class="form-error" *ngIf="applyForm.get('applicantName')?.touched && applyForm.get('applicantName')?.invalid">
+            Full name is required.
+          </div>
+        </div>
+
+        <!-- CV / Portfolio / Resume Link or Text -->
+        <div class="form-group">
+          <label class="form-label" for="cv">CV / Resume (URL or Summary)</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-link"></i>
+            <input
+              type="text"
+              id="cv"
+              class="form-control"
+              formControlName="cv"
+              placeholder="https://linkedin.com/in/... or Google Drive Link or brief summary"
+              [ngClass]="{ 'is-invalid': applyForm.get('cv')?.touched && applyForm.get('cv')?.invalid }">
+          </div>
+          <span class="form-text">Provide a link to your online resume, portfolio, or LinkedIn profile.</span>
+          <div class="form-error" *ngIf="applyForm.get('cv')?.touched && applyForm.get('cv')?.invalid">
+            CV/Resume information is required.
+          </div>
+        </div>
+
+        <!-- Skills Match Notification -->
+        <div class="skills-match-box" *ngIf="matchScore !== null">
+          <div class="match-percentage font-bold text-primary">{{ matchScore }}%</div>
+          <div class="match-text">
+            <span>Automated Skill Match Score</span>
+            <small class="d-block text-muted">Computed based on your profile skills vs job requirements.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeApplyModal()" [disabled]="isSubmitting">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || applyForm.invalid">
+          <i *ngIf="isSubmitting" class="fa-solid fa-spinner spinner"></i>
+          <span>{{ isSubmitting ? 'Submitting Application...' : 'Send Application' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,3 +1,10 @@
+<!-- Splash Screen (only after login) -->
+<app-splash-screen
+  *ngIf="showSplash"
+  (splashDone)="onSplashDone()">
+</app-splash-screen>
+
+<!-- Main Site Content -->
 <div class="app-container">
   <app-navbar></app-navbar>
 
