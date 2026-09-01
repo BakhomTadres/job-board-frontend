@@ -1,0 +1,130 @@
+<div class="pricing-checkout-page container section-padding">
+  <div class="page-header text-center mb-5">
+    <span class="section-subheading">Simple, Transparent Pricing</span>
+    <h1 class="page-title">Supercharge Your Recruitment</h1>
+    <p class="page-subtitle">Choose the right plan to get your open roles in front of top candidates today.</p>
+  </div>
+
+  <!-- Plans Selection Grid -->
+  <div class="grid-3 pricing-cards-grid mb-5">
+    <div
+      *ngFor="let plan of plans"
+      class="card pricing-card"
+      [ngClass]="{ 'selected': selectedPlan.id === plan.id, 'popular': plan.popular }"
+      (click)="selectPlan(plan)">
+      <div class="popular-badge" *ngIf="plan.popular">Most Popular</div>
+      
+      <div class="plan-header">
+        <h3 class="plan-name">{{ plan.name }}</h3>
+        <p class="plan-desc">{{ plan.description }}</p>
+      </div>
+
+      <div class="plan-price-row">
+        <span class="plan-currency">{{ plan.currency }}</span>
+        <span class="plan-price">{{ plan.price }}</span>
+        <span class="plan-period">/ {{ plan.period }}</span>
+      </div>
+
+      <ul class="plan-features-list">
+        <li *ngFor="let feat of plan.features">
+          <i class="fa-solid fa-circle-check feature-icon"></i>
+          <span>{{ feat }}</span>
+        </li>
+      </ul>
+
+      <div class="plan-select-indicator">
+        <button
+          type="button"
+          class="btn btn-block"
+          [ngClass]="selectedPlan.id === plan.id ? 'btn-primary' : 'btn-outline'">
+          {{ selectedPlan.id === plan.id ? 'Selected Plan' : 'Choose ' + plan.name }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Order Summary & Billing Form -->
+  <div class="checkout-box-wrapper container-narrow">
+    <div class="card checkout-card">
+      <div class="checkout-header mb-4">
+        <h2 class="checkout-title">Complete Checkout with Paymob</h2>
+        <p class="text-muted">Review your order details and proceed to secure checkout.</p>
+      </div>
+
+      <!-- Error Alert -->
+      <div class="alert alert-danger" *ngIf="errorMessage">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <div>{{ errorMessage }}</div>
+      </div>
+
+      <!-- Selected Order Summary Box -->
+      <div class="order-summary-box mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="font-bold text-slate-800">{{ selectedPlan.name }}</span>
+          <span class="font-bold text-primary">{{ selectedPlan.price }} {{ selectedPlan.currency }}</span>
+        </div>
+        <p class="text-muted text-sm mb-0">{{ selectedPlan.description }}</p>
+        
+        <div class="summary-divider my-3"></div>
+
+        <div class="d-flex justify-content-between align-items-center">
+          <span class="font-bold text-lg">Total Due:</span>
+          <span class="font-bold text-xl text-primary">{{ selectedPlan.price }} {{ selectedPlan.currency }}</span>
+        </div>
+      </div>
+
+      <!-- Billing Details Form -->
+      <form [formGroup]="billingForm" (ngSubmit)="onProceedToPay()">
+        <h3 class="billing-form-title mb-3">Billing Contact Information</h3>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="bill-fname">First Name</label>
+            <input type="text" id="bill-fname" class="form-control" formControlName="firstName">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bill-lname">Last Name</label>
+            <input type="text" id="bill-lname" class="form-control" formControlName="lastName">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="bill-email">Email Address</label>
+            <input type="email" id="bill-email" class="form-control" formControlName="email">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bill-phone">Phone Number</label>
+            <input type="tel" id="bill-phone" class="form-control" formControlName="phoneNumber">
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="bill-city">City</label>
+            <input type="text" id="bill-city" class="form-control" formControlName="city">
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="bill-street">Street Address</label>
+            <input type="text" id="bill-street" class="form-control" formControlName="street">
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button
+          type="submit"
+          class="btn btn-primary btn-block btn-lg mt-3"
+          [disabled]="isLoading || billingForm.invalid">
+          <i *ngIf="isLoading" class="fa-solid fa-spinner spinner"></i>
+          <span *ngIf="!isLoading"><i class="fa-solid fa-lock"></i> Pay {{ selectedPlan.price }} {{ selectedPlan.currency }} with Paymob</span>
+          <span *ngIf="isLoading">Connecting to Paymob Gateway...</span>
+        </button>
+
+        <div class="secure-badge-footer text-center mt-3">
+          <i class="fa-solid fa-shield-halved text-success"></i>
+          <span class="text-muted text-sm">256-Bit SSL Encrypted Payment via Paymob Gateway</span>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

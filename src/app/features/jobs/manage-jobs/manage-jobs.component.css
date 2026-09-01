@@ -1,0 +1,11 @@
+.action-btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+.jobs-table-card {
+  overflow: hidden;
+  padding: 0;
+}
+.table-responsive {
+  overflow-x: auto;
+}

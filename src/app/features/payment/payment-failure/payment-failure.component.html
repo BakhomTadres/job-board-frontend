@@ -1,0 +1,29 @@
+<div class="payment-status-page container-narrow section-padding">
+  <div class="card payment-status-card text-center p-5">
+    <div class="status-icon-circle bg-danger-light text-danger mb-3">
+      <i class="fa-solid fa-circle-xmark"></i>
+    </div>
+
+    <h1 class="status-title">Payment Unsuccessful</h1>
+    <p class="status-subtitle">
+      We were unable to process your payment transaction. This may be due to insufficient funds, an expired card, or a temporary gateway issue.
+    </p>
+
+    <div class="alert alert-warning text-left my-4">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <div>
+        <strong>No charges were incurred.</strong>
+        <p class="mb-0 text-sm">Please verify your billing details with Paymob or try a different payment method.</p>
+      </div>
+    </div>
+
+    <div class="action-buttons-row mt-4">
+      <a routerLink="/pricing" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-rotate-left"></i> Try Again
+      </a>
+      <a routerLink="/" class="btn btn-secondary btn-lg">
+        Return Home
+      </a>
+    </div>
+  </div>
+</div>

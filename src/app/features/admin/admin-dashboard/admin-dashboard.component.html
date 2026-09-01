@@ -1,0 +1,25 @@
+<div class="container section-padding">
+  <div class="mb-4">
+    <h1 class="page-title">Admin Dashboard</h1>
+    <p class="page-subtitle">Overview of platform metrics and listings.</p>
+  </div>
+
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+  <ng-container *ngIf="!isLoading">
+    <div class="grid-3 mb-4">
+      <div class="card p-4">
+        <h3 class="text-sm font-bold text-muted uppercase">Active Job Postings</h3>
+        <p class="font-bold text-2xl text-primary mt-2">{{ totalJobs }}</p>
+      </div>
+      <div class="card p-4">
+        <h3 class="text-sm font-bold text-muted uppercase">Payment Gateway</h3>
+        <p class="font-bold text-2xl text-success mt-2">Paymob Active</p>
+      </div>
+      <div class="card p-4">
+        <h3 class="text-sm font-bold text-muted uppercase">System Status</h3>
+        <p class="font-bold text-2xl text-info mt-2">Healthy</p>
+      </div>
+    </div>
+  </ng-container>
+</div>
