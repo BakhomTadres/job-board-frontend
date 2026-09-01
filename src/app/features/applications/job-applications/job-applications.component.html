@@ -1,0 +1,43 @@
+<div class="container section-padding">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="page-title">Received Applications</h1>
+      <p class="page-subtitle">Review applicant submissions and candidate match scores.</p>
+    </div>
+    <a routerLink="/jobs/manage" class="btn btn-secondary">
+      <i class="fa-solid fa-arrow-left"></i> Back to Jobs
+    </a>
+  </div>
+
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+  <ng-container *ngIf="!isLoading">
+    <div *ngIf="applications.length === 0" class="card text-center p-5">
+      <i class="fa-solid fa-inbox text-muted mb-3" style="font-size: 3rem;"></i>
+      <h3>No Applications Received Yet</h3>
+      <p class="text-muted">Candidates will appear here as soon as they submit their applications.</p>
+    </div>
+
+    <div *ngIf="applications.length > 0" class="grid-2">
+      <div class="card" *ngFor="let app of applications">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h3 class="font-bold text-lg mb-0">{{ app.applicantName }}</h3>
+          <span class="badge badge-primary">{{ app.matchScore ?? 0 }}% Match</span>
+        </div>
+        <p class="text-muted text-sm mb-2">Submitted: {{ app.createdAt | date:'medium' }}</p>
+        <div class="p-3 bg-slate-50 rounded mb-3">
+          <strong>Resume / CV Notes:</strong>
+          <p class="mb-0 text-sm mt-1 font-mono">{{ app.cv }}</p>
+        </div>
+        <div class="d-flex gap-2">
+          <span class="badge" [ngClass]="{
+            'badge-warning': app.status === 'pending',
+            'badge-info': app.status === 'reviewed',
+            'badge-success': app.status === 'accepted',
+            'badge-danger': app.status === 'rejected'
+          }">Status: {{ app.status }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>

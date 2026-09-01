@@ -1,0 +1,35 @@
+<div class="container section-padding">
+  <div class="mb-4">
+    <h1 class="page-title">My Applications</h1>
+    <p class="page-subtitle">Track the status of your submitted job applications.</p>
+  </div>
+
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+  <ng-container *ngIf="!isLoading">
+    <div *ngIf="applications.length === 0" class="card text-center p-5">
+      <i class="fa-solid fa-file-circle-check text-muted mb-3" style="font-size: 3rem;"></i>
+      <h3>No Applications Submitted Yet</h3>
+      <p class="text-muted">Explore open positions and submit your profile to top employers.</p>
+      <div class="mt-3">
+        <a routerLink="/jobs" class="btn btn-primary">Browse Jobs</a>
+      </div>
+    </div>
+
+    <div *ngIf="applications.length > 0" class="grid-2">
+      <div class="card" *ngFor="let app of applications">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h3 class="font-bold text-lg mb-0">{{ app.job?.title || app.applicantName }}</h3>
+          <span class="badge" [ngClass]="{
+            'badge-warning': app.status === 'pending',
+            'badge-info': app.status === 'reviewed',
+            'badge-success': app.status === 'accepted',
+            'badge-danger': app.status === 'rejected'
+          }">{{ app.status }}</span>
+        </div>
+        <p class="text-sm text-muted mb-2">Applied: {{ app.createdAt | date:'mediumDate' }}</p>
+        <p class="text-sm"><strong>Match Score:</strong> {{ app.matchScore ?? 'N/A' }}%</p>
+      </div>
+    </div>
+  </ng-container>
+</div>

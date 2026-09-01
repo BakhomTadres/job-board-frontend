@@ -1,0 +1,44 @@
+.payment-status-card {
+  border-radius: var(--radius-xl);
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.status-icon-circle {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.75rem;
+  margin: 0 auto;
+}
+
+.bg-danger-light {
+  background-color: var(--danger-light);
+}
+
+.status-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.status-subtitle {
+  font-size: 1rem;
+  color: var(--slate-600);
+  line-height: 1.6;
+}
+
+.action-buttons-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.text-sm {
+  font-size: 0.85rem;
+}

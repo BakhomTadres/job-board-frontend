@@ -1,0 +1,37 @@
+<div class="payment-status-page container-narrow section-padding">
+  <div class="card payment-status-card text-center p-5">
+    <div class="status-icon-circle bg-success-light text-success mb-3">
+      <i class="fa-solid fa-circle-check"></i>
+    </div>
+
+    <h1 class="status-title">Payment Successful!</h1>
+    <p class="status-subtitle">
+      Thank you for your purchase. Your payment has been processed securely via Paymob and your employer credits are now active.
+    </p>
+
+    <!-- Details Box if available -->
+    <div class="payment-info-box text-left my-4" *ngIf="paymentDetails || reference">
+      <div class="info-row" *ngIf="reference || paymentDetails?.specialReference">
+        <span class="info-label">Transaction Reference:</span>
+        <span class="info-val font-mono">{{ paymentDetails?.specialReference || reference }}</span>
+      </div>
+      <div class="info-row" *ngIf="paymentDetails">
+        <span class="info-label">Amount Paid:</span>
+        <span class="info-val font-bold">{{ paymentDetails.amount }} {{ paymentDetails.currency | uppercase }}</span>
+      </div>
+      <div class="info-row" *ngIf="paymentDetails">
+        <span class="info-label">Payment Status:</span>
+        <span class="badge badge-success">{{ paymentDetails.status }}</span>
+      </div>
+    </div>
+
+    <div class="action-buttons-row mt-4">
+      <a routerLink="/jobs/create" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-plus"></i> Post a Job Opening Now
+      </a>
+      <a routerLink="/jobs/manage" class="btn btn-secondary btn-lg">
+        View My Jobs
+      </a>
+    </div>
+  </div>
+</div>
