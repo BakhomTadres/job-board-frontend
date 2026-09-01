@@ -1,0 +1,71 @@
+<footer class="footer-wrapper">
+  <div class="container footer-container">
+    <div class="footer-grid">
+      <!-- Brand column -->
+      <div class="footer-col brand-col">
+        <div class="footer-brand">
+          <div class="brand-icon">
+            <i class="fa-solid fa-briefcase"></i>
+          </div>
+          <span class="brand-name">Career<span>Hub</span></span>
+        </div>
+        <p class="footer-desc">
+          Connecting top-tier talent with world-class employers. Discover remote, full-time, and contract opportunities worldwide.
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+          <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="#" class="social-icon" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+          <a href="#" class="social-icon" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+        </div>
+      </div>
+
+      <!-- Quick links for Job Seekers -->
+      <div class="footer-col">
+        <h4 class="footer-heading">For Job Seekers</h4>
+        <ul class="footer-links">
+          <li><a routerLink="/jobs">Browse All Jobs</a></li>
+          <li><a routerLink="/jobs" [queryParams]="{ type: 'Remote' }">Remote Jobs</a></li>
+          <li><a routerLink="/jobs" [queryParams]="{ type: 'Full-time' }">Full-Time Positions</a></li>
+          <li><a routerLink="/applications/my">Application Tracker</a></li>
+          <li><a routerLink="/profile">Profile & Skills</a></li>
+        </ul>
+      </div>
+
+      <!-- Quick links for Employers -->
+      <div class="footer-col">
+        <h4 class="footer-heading">For Employers</h4>
+        <ul class="footer-links">
+          <li><a routerLink="/jobs/create">Post a Job</a></li>
+          <li><a routerLink="/jobs/manage">Candidate Manager</a></li>
+          <li><a routerLink="/pricing">Pricing Plans</a></li>
+          <li><a routerLink="/pricing">Paymob Checkout</a></li>
+          <li><a routerLink="/admin/dashboard">Admin Insights</a></li>
+        </ul>
+      </div>
+
+      <!-- Support & Legal -->
+      <div class="footer-col">
+        <h4 class="footer-heading">Platform & Support</h4>
+        <ul class="footer-links">
+          <li><a routerLink="/">Home Platform</a></li>
+          <li><a href="mailto:support@careerhub.io">Contact Support</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Security & Compliance</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="footer-bottom">
+      <p class="copyright">
+        &copy; {{ currentYear }} CareerHub Inc. All rights reserved. Built with Angular & Node.js.
+      </p>
+      <div class="payment-badges">
+        <span class="payment-badge"><i class="fa-solid fa-lock"></i> Secure 256-Bit SSL</span>
+        <span class="payment-badge"><i class="fa-solid fa-credit-card"></i> Paymob Powered</span>
+      </div>
+    </div>
+  </div>
+</footer>

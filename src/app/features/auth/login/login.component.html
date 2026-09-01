@@ -1,0 +1,86 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card-container">
+    <div class="auth-header text-center">
+      <a routerLink="/" class="auth-logo">
+        <div class="brand-icon">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <span class="brand-name">Career<span>Hub</span></span>
+      </a>
+      <h2 class="auth-title">Welcome Back</h2>
+      <p class="auth-subtitle">Log in to manage jobs, submit applications, and track your career growth.</p>
+    </div>
+
+    <!-- Error Alert Banner -->
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <div>{{ errorMessage }}</div>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <!-- Email input -->
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <div class="input-icon-wrapper">
+          <i class="fa-regular fa-envelope"></i>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="name@company.com"
+            [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors }">
+        </div>
+        <div class="form-error" *ngIf="f['email'].touched && f['email'].errors">
+          <span *ngIf="f['email'].errors['required']">Email address is required.</span>
+          <span *ngIf="f['email'].errors['email']">Please enter a valid email address.</span>
+        </div>
+      </div>
+
+      <!-- Password input -->
+      <div class="form-group">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <label class="form-label mb-0" for="password">Password</label>
+        </div>
+        <div class="input-icon-wrapper password-wrapper">
+          <i class="fa-solid fa-lock"></i>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Enter your password"
+            [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors }">
+          <button
+            type="button"
+            class="password-toggle-btn"
+            (click)="togglePasswordVisibility()"
+            tabindex="-1"
+            aria-label="Toggle password visibility">
+            <i class="fa-regular" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
+        <div class="form-error" *ngIf="f['password'].touched && f['password'].errors">
+          <span *ngIf="f['password'].errors['required']">Password is required.</span>
+          <span *ngIf="f['password'].errors['minlength']">Password must be at least 6 characters.</span>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary btn-block btn-lg mt-4"
+        [disabled]="isLoading || loginForm.invalid">
+        <i *ngIf="isLoading" class="fa-solid fa-spinner spinner"></i>
+        <span>{{ isLoading ? 'Signing In...' : 'Sign In' }}</span>
+      </button>
+    </form>
+
+    <div class="auth-footer text-center mt-4">
+      <p class="auth-footer-text">
+        Don't have an account yet?
+        <a routerLink="/auth/register" class="font-semibold">Create an account</a>
+      </p>
+    </div>
+  </div>
+</div>

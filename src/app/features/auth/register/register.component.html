@@ -1,0 +1,191 @@
+<div class="auth-page-wrapper">
+  <div class="auth-card-container">
+    <div class="auth-header text-center">
+      <a routerLink="/" class="auth-logo">
+        <div class="brand-icon">
+          <i class="fa-solid fa-briefcase"></i>
+        </div>
+        <span class="brand-name">Career<span>Hub</span></span>
+      </a>
+      <h2 class="auth-title">Create an Account</h2>
+      <p class="auth-subtitle">Join our community to discover top jobs or recruit elite candidates.</p>
+    </div>
+
+    <!-- Error Alert Banner -->
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <div>{{ errorMessage }}</div>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+      <!-- Role Selection Toggle -->
+      <div class="form-group mb-4">
+        <label class="form-label text-center mb-2">I want to:</label>
+        <div class="role-selector-grid">
+          <label class="role-card" [ngClass]="{ 'active': f['role'].value === 'job seeker' }">
+            <input type="radio" formControlName="role" value="job seeker" class="hidden-radio">
+            <div class="role-icon"><i class="fa-solid fa-user-tie"></i></div>
+            <div class="role-title">Find a Job</div>
+            <div class="role-desc">Browse & apply to top companies</div>
+          </label>
+
+          <label class="role-card" [ngClass]="{ 'active': f['role'].value === 'employer' }">
+            <input type="radio" formControlName="role" value="employer" class="hidden-radio">
+            <div class="role-icon"><i class="fa-solid fa-building"></i></div>
+            <div class="role-title">Hire Talent</div>
+            <div class="role-desc">Post jobs & manage applicants</div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Name inputs row -->
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label" for="firstName">First Name</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-user"></i>
+            <input
+              type="text"
+              id="firstName"
+              class="form-control"
+              formControlName="firstName"
+              placeholder="John"
+              [ngClass]="{ 'is-invalid': f['firstName'].touched && f['firstName'].errors }">
+          </div>
+          <div class="form-error" *ngIf="f['firstName'].touched && f['firstName'].errors">
+            <span *ngIf="f['firstName'].errors['required']">First name is required.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="lastName">Last Name</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-user"></i>
+            <input
+              type="text"
+              id="lastName"
+              class="form-control"
+              formControlName="lastName"
+              placeholder="Doe"
+              [ngClass]="{ 'is-invalid': f['lastName'].touched && f['lastName'].errors }">
+          </div>
+          <div class="form-error" *ngIf="f['lastName'].touched && f['lastName'].errors">
+            <span *ngIf="f['lastName'].errors['required']">Last name is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email input -->
+      <div class="form-group">
+        <label class="form-label" for="reg-email">Email Address</label>
+        <div class="input-icon-wrapper">
+          <i class="fa-regular fa-envelope"></i>
+          <input
+            type="email"
+            id="reg-email"
+            class="form-control"
+            formControlName="email"
+            placeholder="name@company.com"
+            [ngClass]="{ 'is-invalid': f['email'].touched && f['email'].errors }">
+        </div>
+        <div class="form-error" *ngIf="f['email'].touched && f['email'].errors">
+          <span *ngIf="f['email'].errors['required']">Email address is required.</span>
+          <span *ngIf="f['email'].errors['email']">Please enter a valid email address.</span>
+        </div>
+      </div>
+
+      <!-- Passwords row -->
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Password</label>
+          <div class="input-icon-wrapper password-wrapper">
+            <i class="fa-solid fa-lock"></i>
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="reg-password"
+              class="form-control"
+              formControlName="password"
+              placeholder="Min. 6 chars"
+              [ngClass]="{ 'is-invalid': f['password'].touched && f['password'].errors }">
+            <button
+              type="button"
+              class="password-toggle-btn"
+              (click)="togglePasswordVisibility()"
+              tabindex="-1">
+              <i class="fa-regular" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div>
+          <div class="form-error" *ngIf="f['password'].touched && f['password'].errors">
+            <span *ngIf="f['password'].errors['required']">Password is required.</span>
+            <span *ngIf="f['password'].errors['minlength']">Min 6 characters.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-confirm-password">Confirm Password</label>
+          <div class="input-icon-wrapper password-wrapper">
+            <i class="fa-solid fa-lock"></i>
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              id="reg-confirm-password"
+              class="form-control"
+              formControlName="passwordConfirm"
+              placeholder="Confirm password"
+              [ngClass]="{ 'is-invalid': f['passwordConfirm'].touched && f['passwordConfirm'].errors }">
+            <button
+              type="button"
+              class="password-toggle-btn"
+              (click)="toggleConfirmPasswordVisibility()"
+              tabindex="-1">
+              <i class="fa-regular" [ngClass]="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+            </button>
+          </div>
+          <div class="form-error" *ngIf="f['passwordConfirm'].touched && f['passwordConfirm'].errors">
+            <span *ngIf="f['passwordConfirm'].errors['required']">Confirmation is required.</span>
+            <span *ngIf="f['passwordConfirm'].errors['mismatch']">Passwords do not match.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Skills (Optional / Recommended for Job Seekers) -->
+      <div class="form-group" *ngIf="f['role'].value === 'job seeker'">
+        <label class="form-label">
+          Your Skills (Optional)
+          <span class="form-text d-inline"> - Used for smart match calculation</span>
+        </label>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-code"></i>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="currentSkillInput"
+            [ngModelOptions]="{standalone: true}"
+            (keydown)="onSkillKeydown($event)"
+            placeholder="Type a skill (e.g. Angular, Node.js) and press Enter">
+        </div>
+        <div class="skills-chips-wrapper mt-2" *ngIf="skillsList.length > 0">
+          <span class="tag-chip active-chip" *ngFor="let s of skillsList; let idx = index">
+            {{ s }}
+            <i class="fa-solid fa-xmark chip-remove" (click)="removeSkill(idx)"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary btn-block btn-lg mt-4"
+        [disabled]="isLoading || registerForm.invalid">
+        <i *ngIf="isLoading" class="fa-solid fa-spinner spinner"></i>
+        <span>{{ isLoading ? 'Creating Account...' : 'Create Account' }}</span>
+      </button>
+    </form>
+
+    <div class="auth-footer text-center mt-4">
+      <p class="auth-footer-text">
+        Already have an account?
+        <a routerLink="/auth/login" class="font-semibold">Sign In</a>
+      </p>
+    </div>
+  </div>
+</div>

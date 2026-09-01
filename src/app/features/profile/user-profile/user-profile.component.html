@@ -1,0 +1,145 @@
+<div class="user-profile-page container-narrow section-padding">
+  <!-- Loading state -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading your account profile..."></app-loading-spinner>
+
+  <div *ngIf="!isLoading">
+    <!-- Header Banner Card -->
+    <div class="card profile-header-card mb-4">
+      <div class="d-flex align-items-center gap-4 flex-wrap">
+        <div class="profile-avatar-large">
+          {{ currentUser?.name ? currentUser!.name.charAt(0).toUpperCase() : 'U' }}
+        </div>
+        <div class="profile-header-meta">
+          <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+            <h1 class="profile-name">{{ currentUser?.name }}</h1>
+            <span class="badge" [ngClass]="{
+              'badge-primary': currentUser?.role === 'employer',
+              'badge-info': currentUser?.role === 'job seeker',
+              'badge-warning': currentUser?.role === 'admin'
+            }">
+              {{ currentUser?.role }}
+            </span>
+          </div>
+          <p class="profile-email text-muted mb-0"><i class="fa-regular fa-envelope"></i> {{ currentUser?.email }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Alert -->
+    <div class="alert alert-danger" *ngIf="errorMessage">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <div>{{ errorMessage }}</div>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div class="card form-card">
+      <h2 class="form-section-title">Edit Profile Information</h2>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <!-- Full Name -->
+        <div class="form-group">
+          <label class="form-label" for="prof-name">Full Name *</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-user"></i>
+            <input
+              type="text"
+              id="prof-name"
+              class="form-control"
+              formControlName="name"
+              [ngClass]="{ 'is-invalid': f['name'].touched && f['name'].errors }">
+          </div>
+          <div class="form-error" *ngIf="f['name'].touched && f['name'].errors">
+            Full name is required.
+          </div>
+        </div>
+
+        <!-- Email Address -->
+        <div class="form-group">
+          <label class="form-label" for="prof-email">Email Address</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-envelope"></i>
+            <input
+              type="email"
+              id="prof-email"
+              class="form-control"
+              formControlName="newEmail"
+              [ngClass]="{ 'is-invalid': f['newEmail'].touched && f['newEmail'].errors }">
+          </div>
+          <div class="form-error" *ngIf="f['newEmail'].touched && f['newEmail'].errors">
+            Please enter a valid email address.
+          </div>
+        </div>
+
+        <!-- Skills Section (Job Seekers) -->
+        <div class="form-group" *ngIf="currentUser?.role === 'job seeker'">
+          <label class="form-label">Professional Skills & Competencies</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-code"></i>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="currentSkillInput"
+              [ngModelOptions]="{standalone: true}"
+              (keydown)="onSkillKeydown($event)"
+              placeholder="Add a new skill (e.g. Node.js, Angular, TypeScript) and press Enter">
+          </div>
+          <span class="form-text">These skills power your automated matching score when applying to job openings.</span>
+
+          <div class="skills-chips-wrapper mt-2" *ngIf="skillsList.length > 0">
+            <span class="tag-chip active-chip" *ngFor="let s of skillsList; let idx = index">
+              {{ s }}
+              <i class="fa-solid fa-xmark chip-remove" (click)="removeSkill(idx)"></i>
+            </span>
+          </div>
+        </div>
+
+        <!-- Password Change Section (Optional) -->
+        <div class="password-change-box mt-4">
+          <h3 class="subsection-title">Change Password (Leave blank to keep current)</h3>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label" for="prof-pass">New Password</label>
+              <div class="input-icon-wrapper">
+                <i class="fa-solid fa-lock"></i>
+                <input
+                  type="password"
+                  id="prof-pass"
+                  class="form-control"
+                  formControlName="password"
+                  placeholder="Min. 6 characters">
+              </div>
+              <div class="form-error" *ngIf="f['password'].touched && f['password'].errors">
+                Password must be at least 6 characters.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="prof-pass-confirm">Confirm New Password</label>
+              <div class="input-icon-wrapper">
+                <i class="fa-solid fa-lock"></i>
+                <input
+                  type="password"
+                  id="prof-pass-confirm"
+                  class="form-control"
+                  formControlName="passwordConfirm"
+                  placeholder="Confirm new password">
+              </div>
+              <div class="form-error" *ngIf="f['passwordConfirm'].touched && f['passwordConfirm'].errors">
+                Passwords do not match.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-flex justify-content-end mt-4">
+          <button type="submit" class="btn btn-primary btn-lg" [disabled]="isSaving || profileForm.invalid">
+            <i *ngIf="isSaving" class="fa-solid fa-spinner spinner"></i>
+            <span>{{ isSaving ? 'Saving Updates...' : 'Save Profile Changes' }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

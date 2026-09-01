@@ -1,0 +1,32 @@
+<div class="modal-backdrop" *ngIf="isOpen" (click)="onCancel()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div class="modal-icon-badge" [ngClass]="isDanger ? 'badge-danger' : 'badge-primary'">
+        <i [class]="isDanger ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-circle-question'"></i>
+      </div>
+      <h3 class="modal-title">{{ title }}</h3>
+      <button class="modal-close-btn" (click)="onCancel()" aria-label="Close dialog">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <p class="modal-message">{{ message }}</p>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="onCancel()" [disabled]="isLoading">
+        {{ cancelText }}
+      </button>
+      <button
+        type="button"
+        class="btn"
+        [ngClass]="isDanger ? 'btn-danger' : 'btn-primary'"
+        (click)="onConfirm()"
+        [disabled]="isLoading">
+        <i *ngIf="isLoading" class="fa-solid fa-spinner spinner"></i>
+        {{ isLoading ? 'Processing...' : confirmText }}
+      </button>
+    </div>
+  </div>
+</div>

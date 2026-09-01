@@ -1,0 +1,30 @@
+.not-found-card {
+  max-width: 580px;
+  margin: 3rem auto;
+}
+
+.error-code {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 6.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  line-height: 1;
+  margin-bottom: 1rem;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, var(--primary), #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.not-found-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--slate-900);
+  margin-bottom: 0.75rem;
+}
+
+.not-found-desc {
+  font-size: 1.05rem;
+  color: var(--slate-600);
+  line-height: 1.6;
+}

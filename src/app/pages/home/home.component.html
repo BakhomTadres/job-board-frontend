@@ -1,0 +1,216 @@
+<!-- Hero Section -->
+<section class="hero-section">
+  <div class="container hero-container">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <i class="fa-solid fa-sparkles"></i> The #1 Platform for Top Tech & Business Talent
+      </div>
+      <h1 class="hero-title">
+        Discover Your Next <span class="highlight">Dream Career</span> Opportunity
+      </h1>
+      <p class="hero-subtitle">
+        Explore thousands of high-paying jobs at leading tech companies, fast-growing startups, and global enterprises. Apply with one click.
+      </p>
+
+      <!-- Search Box Card -->
+      <div class="hero-search-card">
+        <form (ngSubmit)="onSearch()" class="search-form">
+          <div class="search-field">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="Job title, skills, or company..."
+              [(ngModel)]="searchKeyword"
+              name="searchKeyword">
+          </div>
+          <div class="search-divider"></div>
+          <div class="search-field">
+            <i class="fa-solid fa-location-dot search-icon"></i>
+            <input
+              type="text"
+              class="search-input"
+              placeholder="City, state, or 'Remote'..."
+              [(ngModel)]="searchLocation"
+              name="searchLocation">
+          </div>
+          <button type="submit" class="btn btn-primary search-submit-btn">
+            <i class="fa-solid fa-magnifying-glass"></i> Search Jobs
+          </button>
+        </form>
+      </div>
+
+      <!-- Popular Quick Tags -->
+      <div class="popular-tags">
+        <span class="tags-label">Popular Searches:</span>
+        <a [routerLink]="['/jobs']" [queryParams]="{ search: 'Frontend Developer' }" class="popular-tag">Frontend</a>
+        <a [routerLink]="['/jobs']" [queryParams]="{ search: 'Node.js' }" class="popular-tag">Node.js</a>
+        <a [routerLink]="['/jobs']" [queryParams]="{ type: 'Remote' }" class="popular-tag">Remote</a>
+        <a [routerLink]="['/jobs']" [queryParams]="{ search: 'Product Manager' }" class="popular-tag">Product Manager</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Platform Statistics Banner -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of stats">
+        <span class="stat-number">{{ stat.value }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Job Categories Grid -->
+<section class="section-padding categories-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="section-subheading">Explore Categories</span>
+        <h2 class="section-title">Browse Opportunities by Employment Type</h2>
+      </div>
+      <a routerLink="/jobs" class="btn btn-outline btn-sm">
+        View All <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <div class="grid-4 categories-grid">
+      <div
+        class="category-card"
+        *ngFor="let cat of popularCategories"
+        (click)="filterByType(cat.type)">
+        <div class="category-icon-box">
+          <i [class]="cat.icon"></i>
+        </div>
+        <div class="category-info">
+          <h3 class="category-name">{{ cat.name }}</h3>
+          <span class="category-count">{{ cat.count }} open jobs</span>
+        </div>
+        <i class="fa-solid fa-chevron-right category-arrow"></i>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recommended For You (Authenticated Job Seekers) -->
+<section class="section-padding bg-slate" *ngIf="isJobSeeker && (isLoadingRecommended || recommendedJobs.length > 0)">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="section-subheading text-primary">Matched with Your Skills</span>
+        <h2 class="section-title">Recommended Jobs For You</h2>
+      </div>
+      <a routerLink="/jobs" class="btn btn-outline btn-sm" *ngIf="!isLoadingRecommended">
+        Explore More <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- Skeleton Loading Placeholders -->
+    <div class="grid-3" *ngIf="isLoadingRecommended">
+      <div class="skeleton-card" *ngFor="let i of [1, 2, 3]">
+        <div class="skeleton-row">
+          <div class="skeleton-box skeleton-logo"></div>
+          <div class="skeleton-col">
+            <div class="skeleton-box skeleton-line skeleton-title"></div>
+            <div class="skeleton-box skeleton-line skeleton-company"></div>
+          </div>
+        </div>
+        <div class="skeleton-box skeleton-line skeleton-desc"></div>
+        <div class="skeleton-box skeleton-line skeleton-desc-short"></div>
+        <div class="skeleton-tags">
+          <div class="skeleton-box skeleton-tag"></div>
+          <div class="skeleton-box skeleton-tag"></div>
+          <div class="skeleton-box skeleton-tag"></div>
+        </div>
+        <div class="skeleton-footer">
+          <div class="skeleton-box skeleton-line skeleton-meta"></div>
+          <div class="skeleton-box skeleton-line skeleton-salary"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actual Recommended Jobs Grid -->
+    <div class="grid-3 fade-in-cards" *ngIf="!isLoadingRecommended && recommendedJobs.length > 0">
+      <app-job-card
+        *ngFor="let job of recommendedJobs"
+        [job]="job">
+      </app-job-card>
+    </div>
+  </div>
+</section>
+
+<!-- Featured & Recent Jobs Section -->
+<section class="section-padding">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <span class="section-subheading">Latest Postings</span>
+        <h2 class="section-title">Featured & Recent Job Openings</h2>
+      </div>
+      <a routerLink="/jobs" class="btn btn-outline btn-sm">
+        View All Jobs ({{ featuredJobs.length }}+) <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- Loading state -->
+    <app-loading-spinner *ngIf="isLoading" message="Fetching latest opportunities..."></app-loading-spinner>
+
+    <!-- Error state -->
+    <div *ngIf="hasError && !isLoading" class="alert alert-danger">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <div>
+        <strong>Failed to load jobs.</strong>
+        <button class="btn btn-sm btn-outline-danger mt-2" (click)="fetchFeaturedJobs()">Retry</button>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <app-empty-state
+      *ngIf="!isLoading && !hasError && featuredJobs.length === 0"
+      icon="fa-regular fa-briefcase"
+      title="No Job Postings Yet"
+      message="Be the first company to post a new opening on CareerHub."
+      actionText="Post a Job"
+      actionRoute="/jobs/create">
+    </app-empty-state>
+
+    <!-- Job Cards Grid -->
+    <div class="grid-3" *ngIf="!isLoading && !hasError && featuredJobs.length > 0">
+      <app-job-card
+        *ngFor="let job of featuredJobs"
+        [job]="job">
+      </app-job-card>
+    </div>
+
+    <div class="text-center mt-5" *ngIf="!isLoading && featuredJobs.length > 0">
+      <a routerLink="/jobs" class="btn btn-primary btn-lg">
+        Explore All Jobs <i class="fa-solid fa-arrow-right"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action Banner -->
+<section class="cta-section">
+  <div class="container">
+    <div class="cta-box">
+      <div class="cta-content">
+        <h2 class="cta-title">Are You Looking to Hire Exceptional Talent?</h2>
+        <p class="cta-desc">
+          Post your open positions in minutes and connect directly with thousands of qualified professionals with automated skill match scoring.
+        </p>
+        <div class="cta-buttons">
+          <a routerLink="/jobs/create" class="btn btn-primary btn-lg">
+            <i class="fa-solid fa-plus"></i> Post a Job Opening
+          </a>
+          <a routerLink="/pricing" class="btn btn-secondary btn-lg">
+            View Pricing Plans
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,46 @@
+.spinner-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  gap: 1rem;
+  width: 100%;
+}
+
+.spinner-container.full-page {
+  min-height: calc(100vh - 200px);
+}
+
+.spinner-ring {
+  border-radius: 50%;
+  border-style: solid;
+  border-color: var(--slate-200);
+  border-top-color: var(--primary);
+  animation: spin 0.75s linear infinite;
+}
+
+.spinner-sm {
+  width: 20px;
+  height: 20px;
+  border-width: 2.5px;
+}
+
+.spinner-md {
+  width: 42px;
+  height: 42px;
+  border-width: 3.5px;
+}
+
+.spinner-lg {
+  width: 60px;
+  height: 60px;
+  border-width: 4.5px;
+}
+
+.spinner-text {
+  font-size: 0.95rem;
+  color: var(--slate-500);
+  font-weight: 500;
+  margin: 0;
+}

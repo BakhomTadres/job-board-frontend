@@ -1,0 +1,265 @@
+<header class="navbar-wrapper">
+  <div class="container navbar-container">
+    <!-- Brand Logo -->
+    <a routerLink="/" class="navbar-brand" (click)="closeMobileMenu()">
+      <div class="brand-icon">
+        <i class="fa-solid fa-briefcase"></i>
+      </div>
+      <span class="brand-name">Career<span>Hub</span></span>
+    </a>
+
+    <!-- Desktop Navigation Links -->
+    <nav class="nav-links desktop-only">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link"
+      >
+        Home
+      </a>
+      <a
+        routerLink="/jobs"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link"
+      >
+        Find Jobs
+      </a>
+      <a
+        *ngIf="isEmployer"
+        routerLink="/pricing"
+        routerLinkActive="active"
+        class="nav-link"
+      >
+        Pricing
+      </a>
+
+      <!-- Role-based Links -->
+      <ng-container *ngIf="isAuthenticated">
+        <a
+          *ngIf="isJobSeeker"
+          routerLink="/applications/my"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          My Applications
+        </a>
+        <a
+          *ngIf="isEmployer"
+          routerLink="/jobs/manage"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          Manage Jobs
+        </a>
+        <a
+          *ngIf="isAdmin"
+          routerLink="/admin/dashboard"
+          routerLinkActive="active"
+          class="nav-link"
+        >
+          Admin
+        </a>
+      </ng-container>
+    </nav>
+
+    <!-- Desktop Actions -->
+    <div class="nav-actions desktop-only">
+      <ng-container *ngIf="!isAuthenticated">
+        <a routerLink="/auth/login" class="btn btn-secondary btn-sm">Log in</a>
+        <a routerLink="/auth/register" class="btn btn-primary btn-sm"
+          >Sign up</a
+        >
+      </ng-container>
+
+      <ng-container *ngIf="isAuthenticated">
+        <!-- Post Job Button for Employers -->
+        <a
+          *ngIf="isEmployer"
+          routerLink="/jobs/create"
+          class="btn btn-primary btn-sm"
+        >
+          <i class="fa-solid fa-plus"></i> Post a Job
+        </a>
+
+        <!-- User Dropdown -->
+        <div class="user-menu-wrapper">
+          <button class="user-profile-btn" (click)="toggleUserDropdown()">
+            <div class="avatar-circle">
+              {{
+                currentUser?.name
+                  ? currentUser!.name.charAt(0).toUpperCase()
+                  : "U"
+              }}
+            </div>
+            <div class="user-meta">
+              <span class="user-name">{{ currentUser?.name || "User" }}</span>
+              <span
+                class="user-role-badge badge"
+                [ngClass]="{
+                  'badge-primary': currentUser?.role === 'employer',
+                  'badge-info': currentUser?.role === 'job seeker',
+                  'badge-warning': currentUser?.role === 'admin',
+                }"
+              >
+                {{ currentUser?.role }}
+              </span>
+            </div>
+            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+          </button>
+
+          <!-- Dropdown Popup -->
+          <div class="dropdown-menu" *ngIf="isUserDropdownOpen">
+            <div class="dropdown-header">
+              <p class="dropdown-user-email">{{ currentUser?.email }}</p>
+            </div>
+            <div class="dropdown-divider"></div>
+            <a
+              routerLink="/profile"
+              class="dropdown-item"
+              (click)="closeMobileMenu()"
+            >
+              <i class="fa-regular fa-user"></i> My Profile
+            </a>
+            <a
+              *ngIf="isJobSeeker"
+              routerLink="/applications/my"
+              class="dropdown-item"
+              (click)="closeMobileMenu()"
+            >
+              <i class="fa-solid fa-file-lines"></i> My Applications
+            </a>
+            <a
+              *ngIf="isEmployer"
+              routerLink="/jobs/manage"
+              class="dropdown-item"
+              (click)="closeMobileMenu()"
+            >
+              <i class="fa-solid fa-list-check"></i> Manage Posted Jobs
+            </a>
+            <a
+              *ngIf="isAdmin"
+              routerLink="/admin/dashboard"
+              class="dropdown-item"
+              (click)="closeMobileMenu()"
+            >
+              <i class="fa-solid fa-chart-pie"></i> Admin Dashboard
+            </a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item text-danger" (click)="logout()">
+              <i class="fa-solid fa-right-from-bracket"></i> Sign out
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+
+    <!-- Mobile Hamburger Button -->
+    <button
+      class="mobile-toggle-btn mobile-only"
+      (click)="toggleMobileMenu()"
+      aria-label="Toggle navigation menu"
+    >
+      <i
+        class="fa-solid"
+        [ngClass]="isMobileMenuOpen ? 'fa-xmark' : 'fa-bars'"
+      ></i>
+    </button>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div class="mobile-menu" *ngIf="isMobileMenuOpen">
+    <div class="mobile-nav-links">
+      <a
+        routerLink="/"
+        (click)="closeMobileMenu()"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="mobile-link"
+      >
+        <i class="fa-solid fa-house"></i> Home
+      </a>
+      <a
+        routerLink="/jobs"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="nav-link"
+      >
+        Find Jobs
+      </a>
+      <a
+        *ngIf="isEmployer"
+        routerLink="/pricing"
+        (click)="closeMobileMenu()"
+        routerLinkActive="active"
+        class="mobile-link"
+      >
+        <i class="fa-solid fa-tags"></i> Pricing Plans
+      </a>
+
+      <ng-container *ngIf="isAuthenticated">
+        <div class="mobile-section-divider"></div>
+        <a
+          routerLink="/profile"
+          (click)="closeMobileMenu()"
+          class="mobile-link"
+        >
+          <i class="fa-regular fa-user"></i> Profile ({{ currentUser?.name }})
+        </a>
+        <a
+          *ngIf="isJobSeeker"
+          routerLink="/applications/my"
+          (click)="closeMobileMenu()"
+          class="mobile-link"
+        >
+          <i class="fa-solid fa-file-lines"></i> My Applications
+        </a>
+        <a
+          *ngIf="isEmployer"
+          routerLink="/jobs/manage"
+          (click)="closeMobileMenu()"
+          class="mobile-link"
+        >
+          <i class="fa-solid fa-list-check"></i> Manage Jobs
+        </a>
+        <a
+          *ngIf="isEmployer"
+          routerLink="/jobs/create"
+          (click)="closeMobileMenu()"
+          class="mobile-link text-primary font-semibold"
+        >
+          <i class="fa-solid fa-plus"></i> Post a Job
+        </a>
+        <a
+          *ngIf="isAdmin"
+          routerLink="/admin/dashboard"
+          (click)="closeMobileMenu()"
+          class="mobile-link"
+        >
+          <i class="fa-solid fa-chart-pie"></i> Admin Dashboard
+        </a>
+        <button (click)="logout()" class="mobile-link text-danger logout-btn">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign out
+        </button>
+      </ng-container>
+
+      <ng-container *ngIf="!isAuthenticated">
+        <div class="mobile-auth-actions">
+          <a
+            routerLink="/auth/login"
+            (click)="closeMobileMenu()"
+            class="btn btn-secondary btn-block"
+            >Log in</a
+          >
+          <a
+            routerLink="/auth/register"
+            (click)="closeMobileMenu()"
+            class="btn btn-primary btn-block"
+            >Sign up</a
+          >
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</header>
