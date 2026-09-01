@@ -1,35 +1,73 @@
-<div class="container section-padding">
-  <div class="mb-4">
-    <h1 class="page-title">My Applications</h1>
-    <p class="page-subtitle">Track the status of your submitted job applications.</p>
+<div class="my-applications-page container section-padding">
+  <div class="page-header mb-4">
+    <h1 class="page-title">My Job Applications</h1>
+    <p class="page-subtitle">Track the status of your submitted applications and interview progress in real-time.</p>
   </div>
 
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <!-- Loading State -->
+  <app-loading-spinner *ngIf="isLoading" message="Fetching your applications..."></app-loading-spinner>
 
-  <ng-container *ngIf="!isLoading">
-    <div *ngIf="applications.length === 0" class="card text-center p-5">
-      <i class="fa-solid fa-file-circle-check text-muted mb-3" style="font-size: 3rem;"></i>
-      <h3>No Applications Submitted Yet</h3>
-      <p class="text-muted">Explore open positions and submit your profile to top employers.</p>
-      <div class="mt-3">
-        <a routerLink="/jobs" class="btn btn-primary">Browse Jobs</a>
-      </div>
-    </div>
+  <!-- Error Alert -->
+  <div class="alert alert-danger" *ngIf="hasError && !isLoading">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <div>Failed to load applications. <button class="btn btn-sm btn-outline-danger" (click)="fetchApplications()">Retry</button></div>
+  </div>
 
-    <div *ngIf="applications.length > 0" class="grid-2">
-      <div class="card" *ngFor="let app of applications">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <h3 class="font-bold text-lg mb-0">{{ app.job?.title || app.applicantName }}</h3>
-          <span class="badge" [ngClass]="{
-            'badge-warning': app.status === 'pending',
-            'badge-info': app.status === 'reviewed',
-            'badge-success': app.status === 'accepted',
-            'badge-danger': app.status === 'rejected'
-          }">{{ app.status }}</span>
+  <!-- Empty State -->
+  <app-empty-state
+    *ngIf="!isLoading && !hasError && applications.length === 0"
+    icon="fa-regular fa-file-lines"
+    title="No Applications Submitted"
+    message="You have not applied to any job openings yet. Start browsing open positions today."
+    actionText="Browse Available Jobs"
+    actionRoute="/jobs">
+  </app-empty-state>
+
+  <!-- Applications List -->
+  <div class="applications-grid" *ngIf="!isLoading && !hasError && applications.length > 0">
+    <div class="card app-item-card" *ngFor="let app of applications">
+      <div class="app-card-header d-flex justify-content-between align-items-start gap-2">
+        <div>
+          <h3 class="app-job-title">{{ app.jobTitle }}</h3>
+          <span class="app-applicant-name">Applicant: {{ app.applicantName }}</span>
         </div>
-        <p class="text-sm text-muted mb-2">Applied: {{ app.createdAt | date:'mediumDate' }}</p>
-        <p class="text-sm"><strong>Match Score:</strong> {{ app.matchScore ?? 'N/A' }}%</p>
+        <div class="app-badges d-flex align-items-center gap-2">
+          <span *ngIf="app.matchScore !== undefined" class="match-score-pill" [ngClass]="{
+            'match-high': app.matchScore >= 70,
+            'match-medium': app.matchScore >= 40 && app.matchScore < 70,
+            'match-low': app.matchScore < 40
+          }">
+            <i class="fa-solid fa-bolt"></i> {{ app.matchScore }}% Match
+          </span>
+          <span class="badge" [ngClass]="getStatusBadgeClass(app.status)">
+            {{ app.status }}
+          </span>
+        </div>
+      </div>
+
+      <div class="app-card-body">
+        <div class="cv-info-row">
+          <span class="text-muted"><i class="fa-solid fa-link"></i> CV Reference:</span>
+          <a [href]="app.cv" target="_blank" rel="noopener noreferrer" class="cv-link font-medium" *ngIf="app.cv.startsWith('http')">
+            {{ app.cv | slice:0:45 }}{{ app.cv.length > 45 ? '...' : '' }}
+          </a>
+          <span class="cv-text font-medium" *ngIf="!app.cv.startsWith('http')">
+            {{ app.cv }}
+          </span>
+        </div>
+      </div>
+
+      <div class="app-card-footer d-flex justify-content-between align-items-center">
+        <span class="app-date text-muted text-sm" *ngIf="app.createdAt">
+          Submitted {{ app.createdAt | date:'mediumDate' }}
+        </span>
+        <a
+          *ngIf="getJobId(app.jobId)"
+          [routerLink]="['/jobs', getJobId(app.jobId)]"
+          class="btn btn-outline btn-sm">
+          View Job Details <i class="fa-solid fa-arrow-right"></i>
+        </a>
       </div>
     </div>
-  </ng-container>
+  </div>
 </div>

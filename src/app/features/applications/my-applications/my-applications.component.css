@@ -1,1 +1,57 @@
-/* My Applications styles */
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: var(--slate-500);
+  font-size: 1rem;
+}
+
+.applications-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.app-item-card {
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+}
+
+.app-job-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 0.2rem;
+}
+
+.app-applicant-name {
+  font-size: 0.85rem;
+  color: var(--slate-500);
+}
+
+.app-card-body {
+  margin: 1rem 0;
+  padding: 0.85rem 1rem;
+  background-color: var(--slate-50);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--slate-200);
+}
+
+.cv-info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  flex-wrap: wrap;
+}
+
+.cv-link {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.text-sm {
+  font-size: 0.825rem;
+}
