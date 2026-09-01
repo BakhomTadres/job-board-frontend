@@ -1,0 +1,99 @@
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--slate-600);
+}
+
+.back-link:hover {
+  color: var(--primary);
+}
+
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: var(--slate-500);
+  font-size: 1rem;
+}
+
+.applicants-counter {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+.applicant-card {
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+}
+
+.applicant-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background-color: var(--primary);
+  color: var(--white);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+}
+
+.applicant-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--slate-900);
+  margin-bottom: 0.15rem;
+}
+
+.applicant-email {
+  font-size: 0.85rem;
+}
+
+.applicant-card-body {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--slate-100);
+}
+
+.applicant-skills {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.skill-label {
+  font-weight: 600;
+}
+
+.cv-box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background-color: var(--slate-50);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--slate-200);
+  font-size: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.cv-text-preview {
+  color: var(--slate-700);
+}
+
+.status-select {
+  min-width: 150px;
+  font-weight: 600;
+}
+
+/*==================*/
+
+
