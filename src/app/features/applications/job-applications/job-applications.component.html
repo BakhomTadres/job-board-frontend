@@ -1,43 +1,148 @@
-<div class="container section-padding">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1 class="page-title">Received Applications</h1>
-      <p class="page-subtitle">Review applicant submissions and candidate match scores.</p>
-    </div>
-    <a routerLink="/jobs/manage" class="btn btn-secondary">
-      <i class="fa-solid fa-arrow-left"></i> Back to Jobs
+<div class="job-applications-page container section-padding">
+  <!-- Back navigation & header -->
+  <div class="mb-3">
+    <a routerLink="/jobs/manage" class="back-link">
+      <i class="fa-solid fa-arrow-left"></i> Back to Manage Jobs
     </a>
   </div>
 
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
-
-  <ng-container *ngIf="!isLoading">
-    <div *ngIf="applications.length === 0" class="card text-center p-5">
-      <i class="fa-solid fa-inbox text-muted mb-3" style="font-size: 3rem;"></i>
-      <h3>No Applications Received Yet</h3>
-      <p class="text-muted">Candidates will appear here as soon as they submit their applications.</p>
+  <div
+    class="page-header d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2"
+  >
+    <div>
+      <h1 class="page-title">Candidate Applications</h1>
+      <p class="page-subtitle" *ngIf="job">
+        Reviewing applicants for:
+        <strong class="text-primary">{{ job.title }}</strong> ({{
+          job.companyName
+        }})
+      </p>
     </div>
+    <div class="applicants-counter badge badge-primary" *ngIf="!isLoading">
+      {{ applications.length }} Total Applicants
+    </div>
+  </div>
 
-    <div *ngIf="applications.length > 0" class="grid-2">
-      <div class="card" *ngFor="let app of applications">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-          <h3 class="font-bold text-lg mb-0">{{ app.applicantName }}</h3>
-          <span class="badge badge-primary">{{ app.matchScore ?? 0 }}% Match</span>
+  <!-- Loading State -->
+  <app-loading-spinner
+    *ngIf="isLoading"
+    message="Fetching candidate applications..."
+  ></app-loading-spinner>
+
+  <!-- Error Alert -->
+  <div class="alert alert-danger" *ngIf="hasError && !isLoading">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <div>
+      Failed to load applications for this job.
+      <button class="btn btn-sm btn-outline-danger" (click)="fetchData()">
+        Retry
+      </button>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <app-empty-state
+    *ngIf="!isLoading && !hasError && applications.length === 0"
+    icon="fa-regular fa-user"
+    title="No Applications Received Yet"
+    message="There are no candidate submissions for this opening at the moment. As candidates apply, they will appear here ranked by skill match score."
+  >
+  </app-empty-state>
+
+  <!-- Applications List -->
+  <div
+    class="applications-container"
+    *ngIf="!isLoading && !hasError && applications.length > 0"
+  >
+    <div class="card applicant-card mb-3" *ngFor="let app of applications">
+      <div
+        class="applicant-card-header d-flex justify-content-between align-items-start gap-3 flex-wrap"
+      >
+        <div class="d-flex align-items-center gap-3">
+          <div class="applicant-avatar">
+            {{
+              app.applicantName
+                ? app.applicantName.charAt(0).toUpperCase()
+                : "A"
+            }}
+          </div>
+          <div>
+            <h3 class="applicant-name">{{ app.applicantName }}</h3>
+            <div class="applicant-email text-muted">
+              <i class="fa-regular fa-envelope"></i>
+              {{ getApplicantEmail(app) }}
+            </div>
+          </div>
         </div>
-        <p class="text-muted text-sm mb-2">Submitted: {{ app.createdAt | date:'medium' }}</p>
-        <div class="p-3 bg-slate-50 rounded mb-3">
-          <strong>Resume / CV Notes:</strong>
-          <p class="mb-0 text-sm mt-1 font-mono">{{ app.cv }}</p>
+
+        <div class="d-flex align-items-center gap-3">
+          <!-- Match Score -->
+          <div
+            class="match-score-pill"
+            [ngClass]="{
+              'match-high': (app.matchScore || 0) >= 70,
+              'match-medium':
+                (app.matchScore || 0) >= 40 && (app.matchScore || 0) < 70,
+              'match-low': (app.matchScore || 0) < 40,
+            }"
+          >
+            <i class="fa-solid fa-bolt"></i> {{ app.matchScore || 0 }}% Skill
+            Match
+          </div>
+
+          <!-- Status Dropdown / Action  -->
+           <div class="status-action-box">
+            <select
+              class="form-select form-select-sm status-select"
+              [ngModel]="app.status"
+              (ngModelChange)="onStatusChange(app, $event)"
+              [disabled]="updatingAppId === (app._id || app.id)"
+              name="status-{{ app._id || app.id }}"
+            >
+              <option *ngFor="let s of statusOptions" [value]="s">
+                Status: {{ s | titlecase }}
+              </option>
+            </select>
+          </div>
+          
         </div>
-        <div class="d-flex gap-2">
-          <span class="badge" [ngClass]="{
-            'badge-warning': app.status === 'pending',
-            'badge-info': app.status === 'reviewed',
-            'badge-success': app.status === 'accepted',
-            'badge-danger': app.status === 'rejected'
-          }">Status: {{ app.status }}</span>
+      </div>
+
+      <!-- Applicant Details Body -->
+      <div class="applicant-card-body">
+        <!-- Skills -->
+        <div
+          class="applicant-skills mb-2"
+          *ngIf="getApplicantSkills(app).length > 0"
+        >
+          <span class="skill-label text-muted text-sm mr-2"
+            >Candidate Skills:</span
+          >
+          <span class="tag-chip" *ngFor="let sk of getApplicantSkills(app)">
+            {{ sk }}
+          </span>
+        </div>
+
+        <!-- CV Link / Info -->
+        <div class="cv-box">
+          <span class="font-semibold text-slate-700"
+            ><i class="fa-solid fa-file-pdf"></i> Resume / CV:</span
+          >
+          <a
+            *ngIf="app.cv.startsWith('http')"
+            [href]="app.cv"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-outline btn-sm"
+          >
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Resume
+            Link
+          </a>
+          <span *ngIf="!app.cv.startsWith('http')" class="cv-text-preview">
+            {{ app.cv }}
+          </span>
         </div>
       </div>
     </div>
-  </ng-container>
+  </div>
 </div>
