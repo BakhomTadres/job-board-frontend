@@ -1,1 +1,145 @@
-<p>create-job works!</p>
+<div class="create-job-page container-narrow section-padding">
+  <div class="page-header text-center mb-4">
+    <h1 class="page-title">Post a New Job Opening</h1>
+    <p class="page-subtitle">Publish your opening to reach thousands of talented candidates.</p>
+  </div>
+
+  <!-- Error banner -->
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <div>{{ errorMessage }}</div>
+  </div>
+
+  <div class="card form-card">
+    <form [formGroup]="jobForm" (ngSubmit)="onSubmit()">
+      <!-- Job Title -->
+      <div class="form-group">
+        <label class="form-label" for="title">Job Title *</label>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-briefcase"></i>
+          <input
+            type="text"
+            id="title"
+            class="form-control"
+            formControlName="title"
+            placeholder="e.g. Senior Frontend Engineer"
+            [ngClass]="{ 'is-invalid': f['title'].touched && f['title'].errors }">
+        </div>
+        <div class="form-error" *ngIf="f['title'].touched && f['title'].errors">
+          <span *ngIf="f['title'].errors['required']">Job title is required.</span>
+          <span *ngIf="f['title'].errors['minlength']">Must be at least 3 characters.</span>
+        </div>
+      </div>
+
+      <!-- Company Name & Location Row -->
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label" for="companyName">Company Name *</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-regular fa-building"></i>
+            <input
+              type="text"
+              id="companyName"
+              class="form-control"
+              formControlName="companyName"
+              placeholder="e.g. Acme Corp"
+              [ngClass]="{ 'is-invalid': f['companyName'].touched && f['companyName'].errors }">
+          </div>
+          <div class="form-error" *ngIf="f['companyName'].touched && f['companyName'].errors">
+            <span *ngIf="f['companyName'].errors['required']">Company name is required.</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="location">Location *</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-location-dot"></i>
+            <input
+              type="text"
+              id="location"
+              class="form-control"
+              formControlName="location"
+              placeholder="e.g. New York, NY or Remote"
+              [ngClass]="{ 'is-invalid': f['location'].touched && f['location'].errors }">
+          </div>
+          <div class="form-error" *ngIf="f['location'].touched && f['location'].errors">
+            <span *ngIf="f['location'].errors['required']">Location is required.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Job Type & Salary Row -->
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label" for="type">Employment Type *</label>
+          <select id="type" class="form-select" formControlName="type">
+            <option *ngFor="let t of jobTypes" [value]="t">{{ t }}</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="salary">Annual Salary (USD)</label>
+          <div class="input-icon-wrapper">
+            <i class="fa-solid fa-dollar-sign"></i>
+            <input
+              type="number"
+              id="salary"
+              class="form-control"
+              formControlName="salary"
+              placeholder="e.g. 110000"
+              min="0">
+          </div>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label" for="description">Job Description & Responsibilities *</label>
+        <textarea
+          id="description"
+          rows="6"
+          class="form-control"
+          formControlName="description"
+          placeholder="Describe the role, day-to-day responsibilities, qualifications, and benefits..."
+          [ngClass]="{ 'is-invalid': f['description'].touched && f['description'].errors }"></textarea>
+        <div class="form-error" *ngIf="f['description'].touched && f['description'].errors">
+          <span *ngIf="f['description'].errors['required']">Description is required.</span>
+          <span *ngIf="f['description'].errors['minlength']">Description must be at least 20 characters.</span>
+        </div>
+      </div>
+
+      <!-- Skills Required -->
+      <div class="form-group">
+        <label class="form-label">Required Skills / Tech Stack</label>
+        <div class="input-icon-wrapper">
+          <i class="fa-solid fa-tags"></i>
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="currentSkillInput"
+            [ngModelOptions]="{standalone: true}"
+            (keydown)="onSkillKeydown($event)"
+            placeholder="Type skill (e.g. React, Angular, MongoDB) and press Enter">
+        </div>
+        <span class="form-text">Candidates' match score will be calculated against these skills.</span>
+
+        <div class="skills-chips-wrapper mt-2" *ngIf="skillsList.length > 0">
+          <span class="tag-chip active-chip" *ngFor="let s of skillsList; let idx = index">
+            {{ s }}
+            <i class="fa-solid fa-xmark chip-remove" (click)="removeSkill(idx)"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-actions-row mt-4">
+        <a routerLink="/jobs" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="isLoading || jobForm.invalid">
+          <i *ngIf="isLoading" class="fa-solid fa-spinner spinner"></i>
+          <span>{{ isLoading ? 'Publishing Job...' : 'Publish Job Opening' }}</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+

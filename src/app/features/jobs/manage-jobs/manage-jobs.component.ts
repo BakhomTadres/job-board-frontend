@@ -3,6 +3,7 @@ import { JobService } from '../../../core/services/job.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Job } from '../../../core/models/job.model';
+import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-manage-jobs',
@@ -12,8 +13,13 @@ import { Job } from '../../../core/models/job.model';
 export class ManageJobsComponent implements OnInit {
   jobs: Job[] = [];
   isLoading = true;
+  hasError = false;
+  currentUser: User | null = null;
+
+  // Delete modal state
+  isDeleteModalOpen = false;
   jobToDelete: Job | null = null;
-  isConfirmModalOpen = false;
+  isDeleting = false;
 
   constructor(
     private jobService: JobService,
@@ -22,57 +28,72 @@ export class ManageJobsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadJobs();
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+      if (user) {
+        this.fetchMyJobs();
+      }
+    });
   }
 
-  loadJobs(): void {
+  fetchMyJobs(): void {
     this.isLoading = true;
-    this.jobService.getAllJobs().subscribe({
+    this.hasError = false;
+
+    this.jobService.getAllJobs({ limit: 100 }).subscribe({
       next: (res) => {
-        const currentUserId = this.authService.getUserId();
-        const role = this.authService.getUserRole();
-        if (role === 'admin') {
-          this.jobs = res.data;
+        const allJobs = res.data || [];
+        const currentUserId = this.currentUser?._id || this.currentUser?.id;
+
+        if (this.currentUser?.role === 'admin') {
+          // Admin can see and manage all jobs
+          this.jobs = allJobs;
         } else {
-          this.jobs = res.data.filter(j => {
-            const empId = typeof j.employer === 'object' ? j.employer?._id : j.employer;
+          // Employer sees only their own jobs
+          this.jobs = allJobs.filter(job => {
+            const empId = typeof job.employer === 'object' ? job.employer?._id : job.employer;
             return empId === currentUserId;
           });
         }
         this.isLoading = false;
       },
       error: () => {
+        this.hasError = true;
         this.isLoading = false;
       }
     });
   }
 
-  confirmDelete(job: Job): void {
+  promptDeleteJob(job: Job): void {
     this.jobToDelete = job;
-    this.isConfirmModalOpen = true;
+    this.isDeleteModalOpen = true;
   }
 
-  onDeleteConfirmed(): void {
+  cancelDelete(): void {
+    this.isDeleteModalOpen = false;
+    this.jobToDelete = null;
+  }
+
+  confirmDelete(): void {
     if (!this.jobToDelete) return;
+
     const id = this.jobToDelete._id || this.jobToDelete.id;
     if (!id) return;
 
+    this.isDeleting = true;
+
     this.jobService.deleteJob(id).subscribe({
       next: () => {
-        this.toast.success('Job Deleted', 'The job posting was successfully removed.');
-        this.isConfirmModalOpen = false;
+        this.isDeleting = false;
+        this.isDeleteModalOpen = false;
+        this.toast.success('Job Deleted', 'The job posting has been permanently removed.');
+        this.jobs = this.jobs.filter(j => (j._id || j.id) !== id);
         this.jobToDelete = null;
-        this.loadJobs();
       },
       error: (err) => {
-        this.toast.error('Error', err.error?.message || 'Failed to delete job.');
-        this.isConfirmModalOpen = false;
+        this.isDeleting = false;
+        this.toast.error('Deletion Failed', err.error?.message || 'Could not delete job.');
       }
     });
-  }
-
-  onDeleteCancelled(): void {
-    this.isConfirmModalOpen = false;
-    this.jobToDelete = null;
   }
 }

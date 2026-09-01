@@ -1,77 +1,108 @@
-<div class="container section-padding">
-  <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="manage-jobs-page container section-padding">
+  <div class="page-header d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
     <div>
       <h1 class="page-title">Manage Job Postings</h1>
-      <p class="page-subtitle">Track, review, and manage your posted opportunities.</p>
+      <p class="page-subtitle">Track, update, or remove active job listings and review candidate applications.</p>
     </div>
     <a routerLink="/jobs/create" class="btn btn-primary">
-      <i class="fa-solid fa-plus"></i> Post New Job
+      <i class="fa-solid fa-plus"></i> Post a New Job
     </a>
   </div>
 
-  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <!-- Loading State -->
+  <app-loading-spinner *ngIf="isLoading" message="Loading your job postings..."></app-loading-spinner>
 
-  <ng-container *ngIf="!isLoading">
-    <div *ngIf="jobs.length === 0" class="card text-center p-5">
-      <i class="fa-solid fa-briefcase text-muted mb-3" style="font-size: 3rem;"></i>
-      <h3>No Job Postings Yet</h3>
-      <p class="text-muted">You haven't posted any jobs yet. Create your first listing to start receiving applications.</p>
-      <div class="mt-3">
-        <a routerLink="/jobs/create" class="btn btn-primary">Post a Job Opening</a>
-      </div>
-    </div>
+  <!-- Error Alert -->
+  <div class="alert alert-danger" *ngIf="hasError && !isLoading">
+    <i class="fa-solid fa-circle-exclamation"></i>
+    <div>Failed to load jobs. <button class="btn btn-sm btn-outline-danger" (click)="fetchMyJobs()">Retry</button></div>
+  </div>
 
-    <div *ngIf="jobs.length > 0" class="jobs-table-card card">
-      <div class="table-responsive">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Job Title</th>
-              <th>Company</th>
-              <th>Type</th>
-              <th>Location</th>
-              <th>Salary</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let job of jobs">
-              <td class="font-bold">
-                <a [routerLink]="['/jobs', job._id || job.id]" class="text-slate-900 hover:text-primary">
+  <!-- Empty State -->
+  <app-empty-state
+    *ngIf="!isLoading && !hasError && jobs.length === 0"
+    icon="fa-solid fa-briefcase"
+    title="No Active Job Listings"
+    message="You haven't posted any job openings yet. Create your first opening to attract candidates."
+    actionText="Post a Job Opening"
+    actionRoute="/jobs/create">
+  </app-empty-state>
+
+  <!-- Jobs Table / Card List -->
+  <div class="card overflow-hidden" *ngIf="!isLoading && !hasError && jobs.length > 0">
+    <div class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Job Role & Title</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Salary</th>
+            <th>Created</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let job of jobs">
+            <td>
+              <div class="job-table-title-cell">
+                <a [routerLink]="['/jobs', job._id || job.id]" class="job-table-title">
                   {{ job.title }}
                 </a>
-              </td>
-              <td>{{ job.companyName }}</td>
-              <td><span class="badge badge-primary">{{ job.type }}</span></td>
-              <td>{{ job.location }}</td>
-              <td>{{ job.salary ? ('$' + job.salary.toLocaleString() + '/yr') : 'Negotiable' }}</td>
-              <td>
-                <div class="action-btn-group">
-                  <a [routerLink]="['/jobs', job._id || job.id, 'applications']" class="btn btn-sm btn-outline" title="View Applications">
-                    <i class="fa-solid fa-users"></i>
-                  </a>
-                  <a [routerLink]="['/jobs', job._id || job.id, 'edit']" class="btn btn-sm btn-secondary" title="Edit Job">
-                    <i class="fa-solid fa-pen-to-square"></i>
-                  </a>
-                  <button (click)="confirmDelete(job)" class="btn btn-sm btn-danger" title="Delete Job">
-                    <i class="fa-solid fa-trash-can"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                <span class="job-table-company">{{ job.companyName }}</span>
+              </div>
+            </td>
+            <td>
+              <span class="badge badge-primary">{{ job.type }}</span>
+            </td>
+            <td>
+              <span class="text-muted"><i class="fa-solid fa-location-dot"></i> {{ job.location }}</span>
+            </td>
+            <td>
+              <span class="font-semibold">{{ job.salary ? ('$' + job.salary.toLocaleString()) : 'Negotiable' }}</span>
+            </td>
+            <td>
+              <span class="text-muted text-sm">{{ job.createdAt | date:'mediumDate' }}</span>
+            </td>
+            <td>
+              <div class="table-actions-row">
+                <a
+                  [routerLink]="['/jobs', job._id || job.id, 'applications']"
+                  class="btn btn-sm btn-primary"
+                  title="View Candidate Applications">
+                  <i class="fa-solid fa-users"></i> Applicants
+                </a>
+                <a
+                  [routerLink]="['/jobs', job._id || job.id, 'edit']"
+                  class="btn btn-sm btn-secondary"
+                  title="Edit Job">
+                  <i class="fa-regular fa-pen-to-square"></i>
+                </a>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="promptDeleteJob(job)"
+                  title="Delete Job">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </ng-container>
+  </div>
 </div>
 
+<!-- Confirm Delete Modal -->
 <app-confirm-modal
-  [isOpen]="isConfirmModalOpen"
-  title="Delete Job Posting"
-  message="Are you sure you want to delete this job posting? This action cannot be undone."
-  confirmText="Delete"
-  cancelText="Cancel"
-  (confirm)="onDeleteConfirmed()"
-  (cancel)="onDeleteCancelled()">
+  [isOpen]="isDeleteModalOpen"
+  title="Delete Job Listing"
+  [message]="'Are you sure you want to delete \'' + (jobToDelete?.title || 'this job') + '\'? All associated applicant records will also be removed.'"
+  confirmText="Delete Job"
+  cancelText="Keep Job"
+  [isDanger]="true"
+  [isLoading]="isDeleting"
+  (confirm)="confirmDelete()"
+  (cancel)="cancelDelete()">
 </app-confirm-modal>

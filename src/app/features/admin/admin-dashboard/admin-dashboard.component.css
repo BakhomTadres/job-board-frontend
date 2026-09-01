@@ -1,1 +1,88 @@
-/* Admin dashboard styles */
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 0;
+}
+
+.page-subtitle {
+  color: var(--slate-500);
+  font-size: 1rem;
+}
+
+.stat-widget {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.stat-widget-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.bg-indigo { background-color: #e0e7ff; color: #4338ca; }
+.bg-emerald { background-color: #d1fae5; color: #065f46; }
+.bg-sky { background-color: #e0f2fe; color: #0369a1; }
+.bg-amber { background-color: #fef3c7; color: #92400e; }
+
+.stat-widget-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-val {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--slate-900);
+  line-height: 1.1;
+}
+
+.stat-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.card-table-title {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th {
+  background-color: var(--slate-50);
+  padding: 0.85rem 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--slate-600);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--slate-200);
+}
+
+.data-table td {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--slate-100);
+  font-size: 0.9rem;
+}
+
+.text-sm {
+  font-size: 0.825rem;
+}

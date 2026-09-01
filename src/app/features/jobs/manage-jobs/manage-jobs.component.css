@@ -1,11 +1,74 @@
-.action-btn-group {
+.page-title {
+  font-size: 2rem;
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  color: var(--slate-500);
+  font-size: 1rem;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th {
+  background-color: var(--slate-50);
+  padding: 1rem 1.25rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--slate-600);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--slate-200);
+}
+
+.data-table td {
+  padding: 1.1rem 1.25rem;
+  border-bottom: 1px solid var(--slate-100);
+  vertical-align: middle;
+  font-size: 0.9rem;
+}
+
+.data-table tr:hover td {
+  background-color: #fafbfc;
+}
+
+.job-table-title-cell {
   display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.job-table-title {
+  font-weight: 700;
+  color: var(--slate-900);
+  font-size: 0.95rem;
+}
+
+.job-table-title:hover {
+  color: var(--primary);
+}
+
+.job-table-company {
+  font-size: 0.8rem;
+  color: var(--slate-500);
+}
+
+.table-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
 }
-.jobs-table-card {
-  overflow: hidden;
-  padding: 0;
-}
-.table-responsive {
-  overflow-x: auto;
+
+.text-sm {
+  font-size: 0.8rem;
 }
