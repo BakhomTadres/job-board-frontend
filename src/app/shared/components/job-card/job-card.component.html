@@ -1,0 +1,56 @@
+<div class="card job-card card-hover" [routerLink]="['/jobs', job._id || job.id]">
+  <div class="job-card-top">
+    <div class="company-badge-icon">
+      <i class="fa-regular fa-building"></i>
+    </div>
+    
+    <div class="job-header-info">
+      <div class="company-name-row">
+        <span class="company-name">{{ job.companyName }}</span>
+        <span class="badge" [ngClass]="getJobTypeBadgeClass(job.type)">
+          {{ job.type }}
+        </span>
+      </div>
+      <h3 class="job-title">{{ job.title }}</h3>
+    </div>
+
+    <!-- Match score if available -->
+    <div *ngIf="matchScore !== undefined" class="match-score-pill" [ngClass]="{
+      'match-high': matchScore >= 70,
+      'match-medium': matchScore >= 40 && matchScore < 70,
+      'match-low': matchScore < 40
+    }">
+      <i class="fa-solid fa-bolt"></i> {{ matchScore }}% Match
+    </div>
+  </div>
+
+  <p class="job-description-excerpt">
+    {{ job.description | slice:0:150 }}{{ job.description.length > 150 ? '...' : '' }}
+  </p>
+
+  <!-- Skills tags -->
+  <div class="job-skills-list" *ngIf="job.skills && job.skills.length > 0">
+    <span class="tag-chip" *ngFor="let skill of job.skills | slice:0:4">
+      {{ skill }}
+    </span>
+    <span class="tag-chip tag-more" *ngIf="job.skills.length > 4">
+      +{{ job.skills.length - 4 }}
+    </span>
+  </div>
+
+  <!-- Job card meta footer -->
+  <div class="job-card-footer">
+    <div class="job-meta-item">
+      <i class="fa-solid fa-location-dot"></i>
+      <span>{{ job.location }}</span>
+    </div>
+    <div class="job-meta-item salary-item">
+      <i class="fa-solid fa-money-bill-wave"></i>
+      <span>{{ getSalaryFormatted(job.salary) }}</span>
+    </div>
+    <div class="view-details-arrow">
+      <span>Details</span>
+      <i class="fa-solid fa-arrow-right"></i>
+    </div>
+  </div>
+</div>

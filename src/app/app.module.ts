@@ -18,6 +18,7 @@ import { EmptyStateComponent } from './shared/components/empty-state/empty-state
 import { ToastComponent } from './shared/components/toast/toast.component';
 import { ConfirmModalComponent } from './shared/components/confirm-modal/confirm-modal.component';
 import { PaginationComponent } from './shared/components/pagination/pagination.component';
+import { SplashScreenComponent } from './shared/components/splash-screen/splash-screen.component';
 
 // Pages
 import { HomeComponent } from './pages/home/home.component';
@@ -61,6 +62,7 @@ import { PaymentFailureComponent } from './features/payment/payment-failure/paym
     ToastComponent,
     ConfirmModalComponent,
     PaginationComponent,
+    SplashScreenComponent,
     // Pages
     HomeComponent,
     NotFoundComponent,

@@ -1,0 +1,154 @@
+<div class="job-list-page">
+  <!-- Page Header -->
+  <div class="page-header-banner">
+    <div class="container">
+      <div class="page-header-content">
+        <h1 class="page-title">Explore All Open Positions</h1>
+        <p class="page-desc">Discover high-impact roles, compare salaries, and find your next career breakthrough.</p>
+        
+        <!-- Search bar inside header -->
+        <div class="search-bar-box">
+          <form (ngSubmit)="applyFilters()" class="filter-form">
+            <div class="filter-input-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input
+                type="text"
+                placeholder="Job title, keywords, or company..."
+                [(ngModel)]="searchQuery"
+                name="searchQuery"
+                class="filter-input">
+            </div>
+
+            <div class="filter-divider"></div>
+
+            <div class="filter-input-wrap">
+              <i class="fa-solid fa-location-dot"></i>
+              <input
+                type="text"
+                placeholder="City or 'Remote'..."
+                [(ngModel)]="locationQuery"
+                name="locationQuery"
+                class="filter-input">
+            </div>
+
+            <button type="submit" class="btn btn-primary filter-submit-btn">
+              Search
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container main-layout-container">
+    <div class="job-list-layout">
+      <!-- Sidebar Filters -->
+      <aside class="filters-sidebar">
+        <div class="card filter-card">
+          <div class="filter-card-header d-flex justify-content-between align-items-center">
+            <h3 class="filter-heading">Filters</h3>
+            <button
+              class="btn-text-clear"
+              (click)="clearFilters()"
+              *ngIf="searchQuery || locationQuery || companyQuery || selectedType">
+              Clear all
+            </button>
+          </div>
+
+          <!-- Employment Type -->
+          <div class="filter-group">
+            <label class="filter-group-title">Job Type</label>
+            <div class="type-options-list">
+              <button
+                *ngFor="let t of jobTypes"
+                type="button"
+                class="type-pill-btn"
+                [ngClass]="{ 'active': selectedType === t.value }"
+                (click)="onTypeSelect(t.value)">
+                <span>{{ t.label }}</span>
+                <i class="fa-solid fa-check" *ngIf="selectedType === t.value"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Company Filter -->
+          <div class="filter-group">
+            <label class="filter-group-title" for="companyInput">Company Name</label>
+            <div class="input-icon-wrapper">
+              <i class="fa-regular fa-building"></i>
+              <input
+                type="text"
+                id="companyInput"
+                class="form-control form-control-sm"
+                placeholder="e.g. Google, Stripe"
+                [(ngModel)]="companyQuery"
+                (keyup.enter)="applyFilters()">
+            </div>
+          </div>
+
+          
+        </div>
+
+        <!-- Employer Promo Box -->
+        <div class="card employer-promo-card mt-4" *ngIf="isEmployer">
+          <h4 class="promo-title">Hiring for a team?</h4>
+          <p class="promo-desc">Post a new position in minutes and start receiving matched candidate applications.</p>
+          <a routerLink="/jobs/create" class="btn btn-primary btn-sm btn-block">
+            <i class="fa-solid fa-plus"></i> Post a Job
+          </a>
+        </div>
+      </aside>
+
+      <!-- Main Results Column -->
+      <main class="jobs-main-content">
+        <!-- Results Bar -->
+        <div class="results-bar">
+          <div class="results-count">
+            Showing <span class="font-bold text-primary">{{ jobs.length }}</span> jobs
+            <span *ngIf="selectedType"> • <span class="badge badge-primary">{{ selectedType }}</span></span>
+            <span *ngIf="locationQuery"> in "{{ locationQuery }}"</span>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <app-loading-spinner *ngIf="isLoading" message="Loading job listings..."></app-loading-spinner>
+
+        <!-- Error State -->
+        <div *ngIf="hasError && !isLoading" class="alert alert-danger">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <div>
+            <strong>Error loading jobs.</strong> Please check your connection and try again.
+            <button class="btn btn-sm btn-outline-danger mt-2" (click)="fetchJobs()">Retry</button>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <app-empty-state
+          *ngIf="!isLoading && !hasError && jobs.length === 0"
+          icon="fa-regular fa-folder-open"
+          title="No Matching Jobs Found"
+          message="We couldn't find any job openings matching your search criteria. Try adjusting your filters."
+          actionText="Clear All Filters"
+          (actionClick)="clearFilters()">
+        </app-empty-state>
+
+        <!-- Jobs Grid -->
+        <div class="jobs-grid" *ngIf="!isLoading && !hasError && jobs.length > 0">
+          <app-job-card
+            *ngFor="let job of jobs"
+            [job]="job">
+          </app-job-card>
+        </div>
+
+        <!-- Pagination -->
+        <app-pagination
+          *ngIf="!isLoading && jobs.length > 0"
+          [currentPage]="currentPage"
+          [totalItems]="totalJobs"
+          [pageSize]="pageSize"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      </main>
+    </div>
+  </div>
+</div>

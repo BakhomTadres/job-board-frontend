@@ -1,0 +1,45 @@
+
+<div class="splash-screen"
+     [class.exit]="isExiting"
+     [class.hidden]="isHidden">
+
+  <!-- Animated background orbs -->
+  <div class="splash-orb splash-orb--1"></div>
+  <div class="splash-orb splash-orb--2"></div>
+  <div class="splash-orb splash-orb--3"></div>
+
+  <!-- Floating particles -->
+  <div class="particles">
+    <div class="particle"
+         *ngFor="let p of particles"
+         [style.left]="p.left"
+         [style.animationDuration]="p.duration"
+         [style.animationDelay]="p.delay"
+         [style.width]="p.size"
+         [style.height]="p.size">
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="splash-logo-container">
+    <div class="splash-icon-ring">
+      <i class="fa-solid fa-briefcase"></i>
+    </div>
+
+    <div class="splash-brand">CareerHub</div>
+
+    <div class="splash-tagline">Where Talent Meets Opportunity</div>
+
+    <div class="splash-keywords">
+      <span class="splash-keyword"><i class="fa-solid fa-magnifying-glass"></i> Smart Job Matching</span>
+      <span class="splash-keyword"><i class="fa-solid fa-bolt"></i> Instant Apply</span>
+      <span class="splash-keyword"><i class="fa-solid fa-chart-line"></i> Career Growth</span>
+      <span class="splash-keyword"><i class="fa-solid fa-users"></i> Top Companies</span>
+      <span class="splash-keyword"><i class="fa-solid fa-globe"></i> Remote Ready</span>
+    </div>
+
+    <div class="splash-loader">
+      <div class="splash-loader-bar"></div>
+    </div>
+  </div>
+</div>

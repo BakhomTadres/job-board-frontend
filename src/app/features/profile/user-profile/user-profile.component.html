@@ -100,14 +100,22 @@
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label" for="prof-pass">New Password</label>
-              <div class="input-icon-wrapper">
+              <div class="input-icon-wrapper password-wrapper">
                 <i class="fa-solid fa-lock"></i>
                 <input
-                  type="password"
+                  [type]="showPassword ? 'text' : 'password'"
                   id="prof-pass"
                   class="form-control"
                   formControlName="password"
                   placeholder="Min. 6 characters">
+                <button
+                  type="button"
+                  class="password-toggle-btn"
+                  (click)="togglePasswordVisibility()"
+                  tabindex="-1"
+                  aria-label="Toggle password visibility">
+                  <i class="fa-regular" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+                </button>
               </div>
               <div class="form-error" *ngIf="f['password'].touched && f['password'].errors">
                 Password must be at least 6 characters.
@@ -116,14 +124,22 @@
 
             <div class="form-group">
               <label class="form-label" for="prof-pass-confirm">Confirm New Password</label>
-              <div class="input-icon-wrapper">
+              <div class="input-icon-wrapper password-wrapper">
                 <i class="fa-solid fa-lock"></i>
                 <input
-                  type="password"
+                  [type]="showPasswordConfirm ? 'text' : 'password'"
                   id="prof-pass-confirm"
                   class="form-control"
                   formControlName="passwordConfirm"
                   placeholder="Confirm new password">
+                <button
+                  type="button"
+                  class="password-toggle-btn"
+                  (click)="togglePasswordConfirmVisibility()"
+                  tabindex="-1"
+                  aria-label="Toggle password confirmation visibility">
+                  <i class="fa-regular" [ngClass]="showPasswordConfirm ? 'fa-eye-slash' : 'fa-eye'"></i>
+                </button>
               </div>
               <div class="form-error" *ngIf="f['passwordConfirm'].touched && f['passwordConfirm'].errors">
                 Passwords do not match.

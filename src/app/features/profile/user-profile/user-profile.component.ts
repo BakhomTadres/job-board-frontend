@@ -19,11 +19,22 @@ export class UserProfileComponent implements OnInit {
   skillsList: string[] = [];
   currentSkillInput = '';
 
+  showPassword = false;
+  showPasswordConfirm = false;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private toast: ToastService
   ) {}
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  togglePasswordConfirmVisibility(): void {
+    this.showPasswordConfirm = !this.showPasswordConfirm;
+  }
 
   ngOnInit(): void {
     this.profileForm = this.fb.group({

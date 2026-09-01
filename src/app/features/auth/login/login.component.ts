@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { SplashService } from '../../../core/services/splash.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private toast: ToastService
+    private toast: ToastService,
+    private splashService: SplashService
   ) {}
 
   ngOnInit(): void {
@@ -54,21 +56,20 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.isLoading = false;
-        this.toast.success('Welcome back!', 'You have successfully logged in.');
-        
-        // redirect based on user role or returnUrl
-        if (this.returnUrl && this.returnUrl !== '/') {
-          this.router.navigateByUrl(this.returnUrl);
-        } else {
-          const role = this.authService.getUserRole();
-          if (role === 'admin') {
-            this.router.navigate(['/admin/dashboard']);
-          } else if (role === 'employer') {
-            this.router.navigate(['/jobs/manage']);
+
+        // Listen to splash screen completion event
+        const sub = this.splashService.splashDone$.subscribe(() => {
+          sub.unsubscribe();
+          this.toast.success('Welcome back!', 'You have successfully logged in.');
+          if (this.returnUrl && this.returnUrl !== '/') {
+            this.router.navigateByUrl(this.returnUrl);
           } else {
-            this.router.navigate(['/jobs']);
+            this.router.navigate(['/']);
           }
-        }
+        });
+
+        // Trigger splash screen
+        this.splashService.triggerSplash();
       },
       error: (err) => {
         this.isLoading = false;

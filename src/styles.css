@@ -335,7 +335,7 @@ textarea.form-control {
   position: relative;
 }
 
-.input-icon-wrapper i {
+.input-icon-wrapper > i {
   position: absolute;
   left: 0.95rem;
   top: 50%;
@@ -346,6 +346,10 @@ textarea.form-control {
 
 .input-icon-wrapper .form-control {
   padding-left: 2.6rem;
+}
+
+.input-icon-wrapper.password-wrapper .form-control {
+  padding-right: 2.75rem;
 }
 
 /* Cards */
