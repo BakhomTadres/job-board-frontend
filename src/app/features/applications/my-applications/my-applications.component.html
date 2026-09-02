@@ -61,12 +61,71 @@
         <span class="app-date text-muted text-sm" *ngIf="app.createdAt">
           Submitted {{ app.createdAt | date:'mediumDate' }}
         </span>
-        <a
-          *ngIf="getJobId(app.jobId)"
-          [routerLink]="['/jobs', getJobId(app.jobId)]"
-          class="btn btn-outline btn-sm">
-          View Job Details <i class="fa-solid fa-arrow-right"></i>
-        </a>
+        <div class="d-flex align-items-center gap-2">
+          <a
+            *ngIf="getJobId(app.jobId)"
+            [routerLink]="['/jobs', getJobId(app.jobId)]"
+            class="btn btn-outline btn-sm">
+            View Job Details <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <button
+            type="button"
+            class="btn btn-outline-danger btn-sm"
+            (click)="openDeleteModal(app)">
+            <i class="fa-solid fa-trash"></i>
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop-custom" *ngIf="showDeleteModal" (click)="closeDeleteModal()">
+    <div class="card modal-box-custom" (click)="$event.stopPropagation()">
+      <div class="modal-header-custom d-flex justify-content-between align-items-center">
+        <h4 class="modal-title-custom mb-0">
+          <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+          Delete Application
+        </h4>
+        <button
+          type="button"
+          class="btn-close-custom"
+          [disabled]="!!deletingId"
+          (click)="closeDeleteModal()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body-custom">
+        <p class="mb-2">
+          Are you sure you want to delete your application for
+          <strong>{{ appToDelete?.jobTitle }}</strong>?
+        </p>
+        <p class="text-muted text-sm mb-0">This action cannot be undone.</p>
+
+        <div class="alert alert-danger mt-3 mb-0" *ngIf="deleteError">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <div>{{ deleteError }}</div>
+        </div>
+      </div>
+
+      <div class="modal-footer-custom d-flex justify-content-end gap-2">
+        <button
+          type="button"
+          class="btn btn-outline btn-sm"
+          [disabled]="!!deletingId"
+          (click)="closeDeleteModal()">
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger btn-sm"
+          [disabled]="!!deletingId"
+          (click)="confirmDelete()">
+          <i class="fa-solid fa-spinner fa-spin" *ngIf="deletingId"></i>
+          {{ deletingId ? 'Deleting...' : 'Yes, Delete' }}
+        </button>
       </div>
     </div>
   </div>

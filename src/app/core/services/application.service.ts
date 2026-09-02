@@ -36,4 +36,9 @@ export class ApplicationService {
   updateApplicationStatus(applicationId: string, status: ApplicationStatus): Observable<ApplicationResponse> {
     return this.http.patch<ApplicationResponse>(`${this.apiUrl}/applications/${applicationId}`, { status });
   }
+
+  // بيمسح طلب تقديم معين - GET /api/applications/:id
+  deleteApplication(applicationId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/applications/${applicationId}`);
+  }
 }

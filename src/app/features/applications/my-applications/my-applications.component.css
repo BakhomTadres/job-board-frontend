@@ -55,3 +55,71 @@
 .text-sm {
   font-size: 0.825rem;
 }
+
+/* ==== Delete Confirmation Modal ==== */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 1rem;
+}
+
+.modal-box-custom {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.25rem;
+  animation: modal-pop 0.15s ease-out;
+}
+
+@keyframes modal-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.modal-header-custom {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.modal-title-custom {
+  font-size: 1.05rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-close-custom {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.btn-close-custom:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-body-custom {
+  margin-bottom: 1rem;
+}
+
+.modal-footer-custom {
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  padding-top: 0.75rem;
+}
