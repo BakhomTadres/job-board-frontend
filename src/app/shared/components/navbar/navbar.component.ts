@@ -51,6 +51,11 @@ export class NavbarComponent implements OnInit {
     return this.authService.hasRole('employer', 'admin');
   }
 
+  // زي isEmployer بس بيستثني الـ admin - يستخدم في الأماكن اللي admin مش المفروض يشوفها زي Pricing
+  get isEmployerOnly(): boolean {
+    return this.authService.hasRole('employer');
+  }
+
   get isAdmin(): boolean {
     return this.authService.hasRole('admin');
   }

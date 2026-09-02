@@ -27,7 +27,7 @@
         Find Jobs
       </a>
       <a
-        *ngIf="isEmployer"
+        *ngIf="isEmployerOnly"
         routerLink="/pricing"
         routerLinkActive="active"
         class="nav-link"
@@ -189,7 +189,7 @@
         Find Jobs
       </a>
       <a
-        *ngIf="isEmployer"
+        *ngIf="isEmployerOnly"
         routerLink="/pricing"
         (click)="closeMobileMenu()"
         routerLinkActive="active"
