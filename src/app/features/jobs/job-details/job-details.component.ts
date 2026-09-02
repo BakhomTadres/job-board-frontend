@@ -96,8 +96,19 @@ export class JobDetailsComponent implements OnInit {
     });
   }
 
+  get isJobSeeker(): boolean {
+    return this.authService.isLoggedIn() && this.authService.hasRole('job seeker');
+  }
+
   calculateLocalMatchScore(): void {
+    // Match score is only applicable for Job Seekers
+    if (!this.isJobSeeker) {
+      this.matchScore = null;
+      return;
+    }
+
     if (!this.job || !this.currentUser || !this.job.skills || this.job.skills.length === 0) {
+      this.matchScore = null;
       return;
     }
 
@@ -105,7 +116,7 @@ export class JobDetailsComponent implements OnInit {
     const jobSkills = this.job.skills.map(s => s.toLowerCase().trim());
 
     if (jobSkills.length === 0) {
-      this.matchScore = 100;
+      this.matchScore = null;
       return;
     }
 

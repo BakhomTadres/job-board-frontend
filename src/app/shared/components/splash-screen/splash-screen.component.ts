@@ -18,13 +18,13 @@ export class SplashScreenComponent implements OnInit, OnDestroy {
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
   ngOnInit(): void {
-    // Generate particles data
-    for (let i = 0; i < 30; i++) {
+    // Generate particles data with negative delays so they are already in motion across the screen
+    for (let i = 0; i < 35; i++) {
       this.particles.push({
-        left: Math.random() * 100 + '%',
-        duration: (4 + Math.random() * 6) + 's',
-        delay: (Math.random() * 5) + 's',
-        size: (2 + Math.random() * 4) + 'px'
+        left: (Math.random() * 96 + 2).toFixed(1) + '%',
+        duration: (5 + Math.random() * 5).toFixed(1) + 's',
+        delay: (-Math.random() * 10).toFixed(1) + 's',
+        size: (5 + Math.random() * 10).toFixed(1) + 'px'
       });
     }
 

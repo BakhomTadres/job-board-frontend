@@ -35,7 +35,7 @@
           <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
             <span class="company-heading">{{ job.companyName }}</span>
             <span class="badge badge-primary">{{ job.type }}</span>
-            <span *ngIf="matchScore !== null" class="match-score-pill" [ngClass]="{
+            <span *ngIf="isJobSeeker && matchScore !== null" class="match-score-pill" [ngClass]="{
               'match-high': matchScore >= 70,
               'match-medium': matchScore >= 40 && matchScore < 70,
               'match-low': matchScore < 40

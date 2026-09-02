@@ -8,7 +8,6 @@ import { Job } from '../../../core/models/job.model';
 })
 export class JobCardComponent {
   @Input() job!: Job;
-  @Input() matchScore?: number;
   @Input() showActions = true;
 
   getJobTypeBadgeClass(type: string): string {

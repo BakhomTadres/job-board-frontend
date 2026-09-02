@@ -56,24 +56,42 @@
   100% { transform: translate(40px, -30px) scale(1.15); }
 }
 
-/* ========== Floating particles ========== */
+/* ========== Floating particles (Bubbles) ========== */
 .particles {
   position: absolute;
   inset: 0;
   overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
 }
 .particle {
   position: absolute;
-  width: 4px; height: 4px;
-  background: rgba(255, 255, 255, 0.3);
+  bottom: -30px;
+  background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.6) 0%, rgba(199, 210, 254, 0.25) 60%, rgba(255, 255, 255, 0.1) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
-  animation: particleRise linear infinite;
+  animation-name: particleRise;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  box-shadow: 0 0 12px rgba(165, 180, 252, 0.25), inset 0 0 4px rgba(255, 255, 255, 0.4);
+  will-change: transform, opacity;
 }
 @keyframes particleRise {
-  0%   { transform: translateY(100vh) scale(0); opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
-  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.6);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.75;
+  }
+  85% {
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate3d(15px, -115vh, 0) scale(1.15);
+    opacity: 0;
+  }
 }
 
 /* ========== Logo Container ========== */

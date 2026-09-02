@@ -32,12 +32,12 @@
           <span class="app-applicant-name">Applicant: {{ app.applicantName }}</span>
         </div>
         <div class="app-badges d-flex align-items-center gap-2">
-          <span *ngIf="app.matchScore !== undefined" class="match-score-pill" [ngClass]="{
-            'match-high': app.matchScore >= 70,
-            'match-medium': app.matchScore >= 40 && app.matchScore < 70,
-            'match-low': app.matchScore < 40
+          <span *ngIf="getMatchScore(app) !== undefined" class="match-score-pill" [ngClass]="{
+            'match-high': getMatchScore(app) >= 70,
+            'match-medium': getMatchScore(app) >= 40 && getMatchScore(app) < 70,
+            'match-low': getMatchScore(app) < 40
           }">
-            <i class="fa-solid fa-bolt"></i> {{ app.matchScore }}% Match
+            <i class="fa-solid fa-bolt"></i> {{ getMatchScore(app) }}% Match
           </span>
           <span class="badge" [ngClass]="getStatusBadgeClass(app.status)">
             {{ app.status }}

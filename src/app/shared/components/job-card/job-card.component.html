@@ -13,15 +13,6 @@
       </div>
       <h3 class="job-title">{{ job.title }}</h3>
     </div>
-
-    <!-- Match score if available -->
-    <div *ngIf="matchScore !== undefined && matchScore !== null" class="match-score-pill" [ngClass]="{
-      'match-high': (matchScore || 0) >= 70,
-      'match-medium': (matchScore || 0) >= 40 && (matchScore || 0) < 70,
-      'match-low': (matchScore || 0) < 40
-    }">
-      <i class="fa-solid fa-bolt"></i> {{ matchScore }}% Match
-    </div>
   </div>
 
   <p class="job-description-excerpt" *ngIf="job.description">
