@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Job, JobFilters, JobListResponse, CreateJobDto, UpdateJobDto, RecommendedJobsResponse } from '../models/job.model';
+import { Job, JobFilters, JobListResponse, CreateJobDto, UpdateJobDto, RecommendedJobsResponse, JobStatsResponse } from '../models/job.model';
 import { JobPostingEligibility } from '../models/user.model';
 
 @Injectable({
@@ -12,6 +12,10 @@ export class JobService {
   private apiUrl = `${environment.apiUrl}/jobs`;
 
   constructor(private http: HttpClient) {}
+
+  getPlatformStats(): Observable<JobStatsResponse> {
+    return this.http.get<JobStatsResponse>(`${this.apiUrl}/stats`);
+  }
 
   checkJobPostingEligibility(): Observable<JobPostingEligibility> {
     return this.http.get<JobPostingEligibility>(`${environment.apiUrl}/users/job-posting-eligibility`);
