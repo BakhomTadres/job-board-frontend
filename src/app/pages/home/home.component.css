@@ -159,6 +159,8 @@
   font-size: 2rem;
   font-weight: 800;
   color: var(--slate-900);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.5px;
 }
 
 .stat-label {

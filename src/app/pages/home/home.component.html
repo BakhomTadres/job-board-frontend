@@ -87,7 +87,9 @@
         </div>
         <div class="category-info">
           <h3 class="category-name">{{ cat.name }}</h3>
-          <span class="category-count">{{ cat.count }} open jobs</span>
+          <span class="category-count">
+            {{ cat.count >= 1000 ? (cat.count | number) + '+' : cat.count }} {{ cat.count === 1 ? 'open job' : 'open jobs' }}
+          </span>
         </div>
         <i class="fa-solid fa-chevron-right category-arrow"></i>
       </div>
@@ -151,7 +153,7 @@
         <h2 class="section-title">Featured & Recent Job Openings</h2>
       </div>
       <a routerLink="/jobs" class="btn btn-outline btn-sm">
-        View All Jobs ({{ featuredJobs.length }}+) <i class="fa-solid fa-arrow-right"></i>
+        View All Jobs ({{ totalJobsCount > 0 ? totalJobsCount : (featuredJobs.length > 0 ? featuredJobs.length + '+' : '') }}) <i class="fa-solid fa-arrow-right"></i>
       </a>
     </div>
 

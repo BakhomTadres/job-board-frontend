@@ -56,3 +56,23 @@ export interface UpdateJobDto {
   type?: JobType;
   skills?: string[];
 }
+
+export interface PlatformStats {
+  totalJobs: number;
+  verifiedCompanies: number;
+  activeCandidates: number;
+  matchRate: number;
+  categoryCounts: {
+    Remote: number;
+    'Full-time': number;
+    Freelance: number;
+    'Part-time': number;
+    [key: string]: number;
+  };
+}
+
+export interface JobStatsResponse {
+  status: string;
+  data: PlatformStats;
+}
+
