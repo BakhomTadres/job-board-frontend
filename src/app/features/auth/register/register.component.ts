@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors }
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { SplashService } from '../../../core/services/splash.service';
 import { UserRole } from '../../../core/models/user.model';
 
 @Component({
@@ -24,7 +25,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private toast: ToastService
+    private toast: ToastService,
+    private splashService: SplashService
   ) {}
 
   ngOnInit(): void {
@@ -102,12 +104,16 @@ export class RegisterComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.isLoading = false;
-        this.toast.success('Account Created', 'Your account has been registered successfully!');
-        if (role === 'employer') {
-          this.router.navigate(['/jobs/create']);
-        } else {
-          this.router.navigate(['/jobs']);
-        }
+
+        // Listen to splash screen completion event
+        const sub = this.splashService.splashDone$.subscribe(() => {
+          sub.unsubscribe();
+          this.toast.success('Welcome!', 'Your account has been registered successfully.');
+          this.router.navigate(['/']);
+        });
+
+        // Trigger welcome animation splash screen
+        this.splashService.triggerSplash();
       },
       error: (err) => {
         this.isLoading = false;

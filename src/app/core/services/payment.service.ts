@@ -19,4 +19,17 @@ export class PaymentService {
   getPaymentById(id: string): Observable<PaymentDetailsResponse> {
     return this.http.get<PaymentDetailsResponse>(`${this.apiUrl}/${id}`);
   }
+
+  confirmPaymentSession(data: {
+    paymentId?: string;
+    reference?: string;
+    transactionId?: string | number;
+    orderId?: string | number;
+    success?: boolean | string;
+  }): Observable<{ status: string; message?: string; data: any; user?: { jobCredits?: number; subscription?: any } }> {
+    return this.http.post<{ status: string; message?: string; data: any; user?: { jobCredits?: number; subscription?: any } }>(
+      `${this.apiUrl}/confirm-session`,
+      data
+    );
+  }
 }

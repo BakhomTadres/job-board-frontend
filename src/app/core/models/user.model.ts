@@ -1,5 +1,19 @@
 export type UserRole = 'job seeker' | 'employer' | 'admin';
 
+export interface Subscription {
+  plan: 'none' | 'starter' | 'featured' | 'unlimited' | 'admin' | string;
+  expiresAt?: string | Date;
+  isActive: boolean;
+}
+
+export interface JobPostingEligibility {
+  status: string;
+  canPost: boolean;
+  jobCredits: number;
+  isSubscribed: boolean;
+  subscription?: Subscription;
+}
+
 export interface User {
   _id?: string;
   id?: string;
@@ -7,6 +21,8 @@ export interface User {
   email: string;
   role: UserRole;
   skills?: string[];
+  jobCredits?: number;
+  subscription?: Subscription;
   token?: string;
   createdAt?: string;
   updatedAt?: string;

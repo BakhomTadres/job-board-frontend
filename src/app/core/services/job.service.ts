@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Job, JobFilters, JobListResponse, CreateJobDto, UpdateJobDto, RecommendedJobsResponse } from '../models/job.model';
+import { JobPostingEligibility } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,10 @@ export class JobService {
   private apiUrl = `${environment.apiUrl}/jobs`;
 
   constructor(private http: HttpClient) {}
+
+  checkJobPostingEligibility(): Observable<JobPostingEligibility> {
+    return this.http.get<JobPostingEligibility>(`${environment.apiUrl}/users/job-posting-eligibility`);
+  }
 
   getAllJobs(filters?: JobFilters): Observable<JobListResponse> {
     let params = new HttpParams();
@@ -33,8 +38,8 @@ export class JobService {
     return this.http.get<RecommendedJobsResponse>(`${this.apiUrl}/recommended`);
   }
 
-  createJob(data: CreateJobDto): Observable<{ message: string; data: Job }> {
-    return this.http.post<{ message: string; data: Job }>(this.apiUrl, data);
+  createJob(data: CreateJobDto): Observable<{ message: string; data: Job; remainingCredits?: number | string }> {
+    return this.http.post<{ message: string; data: Job; remainingCredits?: number | string }>(this.apiUrl, data);
   }
 
   updateJob(id: string, data: UpdateJobDto): Observable<Job> {

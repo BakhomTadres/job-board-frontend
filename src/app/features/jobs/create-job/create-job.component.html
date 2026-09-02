@@ -4,6 +4,43 @@
     <p class="page-subtitle">Publish your opening to reach thousands of talented candidates.</p>
   </div>
 
+  <!-- Employer Credits / Subscription Status Banner -->
+  <div class="credits-status-banner mb-4" *ngIf="!isCheckingEligibility">
+    <!-- Case 1: Admin -->
+    <div class="status-badge-card admin-badge" *ngIf="isAdmin">
+      <div class="badge-icon-box text-primary"><i class="fa-solid fa-shield-halved"></i></div>
+      <div class="badge-info">
+        <span class="badge-title font-semibold">Admin Account (Unlimited Access)</span>
+        <span class="badge-desc text-muted">You have administrative privileges. Job postings do not require or deduct credits.</span>
+      </div>
+      <span class="badge badge-primary">Admin</span>
+    </div>
+
+    <!-- Case 2: Active Unlimited / Weekly Subscription -->
+    <div class="status-badge-card subscription-badge" *ngIf="!isAdmin && isSubscribed">
+      <div class="badge-icon-box text-warning"><i class="fa-solid fa-crown"></i></div>
+      <div class="badge-info">
+        <span class="badge-title font-semibold">{{ subscriptionPlan === 'weekly' ? 'Weekly Hiring Pass Active' : 'Unlimited Plan Active' }}</span>
+        <span class="badge-desc text-muted" *ngIf="subscriptionExpiresAt">
+          Active until {{ subscriptionExpiresAt | date:'mediumDate' }}. Post as many jobs as needed without deductions.
+        </span>
+      </div>
+      <span class="badge badge-success">Active Subscription</span>
+    </div>
+
+    <!-- Case 3: Single Job Credits Available -->
+    <div class="status-badge-card credits-badge" *ngIf="!isAdmin && !isSubscribed && userCredits > 0">
+      <div class="badge-icon-box text-primary"><i class="fa-solid fa-coins"></i></div>
+      <div class="badge-info">
+        <span class="badge-title font-semibold">Remaining Credits: {{ userCredits }} {{ userCredits === 1 ? 'Job' : 'Jobs' }}</span>
+        <span class="badge-desc text-muted">Available Job Credits: {{ userCredits }}. (1 credit will be deducted upon posting)</span>
+      </div>
+      <a routerLink="/pricing" class="btn btn-sm btn-outline-primary">
+        <i class="fa-solid fa-cart-plus"></i> Buy More Credits
+      </a>
+    </div>
+  </div>
+
   <!-- Error banner -->
   <div class="alert alert-danger" *ngIf="errorMessage">
     <i class="fa-solid fa-circle-exclamation"></i>

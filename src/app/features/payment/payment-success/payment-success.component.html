@@ -23,10 +23,19 @@
         <span class="info-label">Payment Status:</span>
         <span class="badge badge-success">{{ paymentDetails.status }}</span>
       </div>
+      <div class="info-row" *ngIf="userCredits !== null">
+        <span class="info-label">Active Employer Balance:</span>
+        <span class="info-val font-bold text-success" *ngIf="isSubscribed">
+          <i class="fa-solid fa-crown"></i> {{ (currentUser?.subscription?.plan === 'weekly' ? 'Weekly Hiring Pass' : 'Unlimited Plan') }} Active
+        </span>
+        <span class="info-val font-bold text-primary" *ngIf="!isSubscribed">
+          <i class="fa-solid fa-coins"></i> {{ userCredits }} Job Credit{{ userCredits === 1 ? '' : 's' }} Available
+        </span>
+      </div>
     </div>
 
     <div class="action-buttons-row mt-4">
-      <a routerLink="/jobs/create" class="btn btn-primary btn-lg">
+      <a routerLink="/jobs/create" class="btn btn-primary btn-lg pulse-hover">
         <i class="fa-solid fa-plus"></i> Post a Job Opening Now
       </a>
       <a routerLink="/jobs/manage" class="btn btn-secondary btn-lg">

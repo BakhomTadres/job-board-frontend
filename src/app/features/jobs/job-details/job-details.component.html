@@ -65,7 +65,7 @@
         <!-- Action CTA buttons -->
         <div class="header-cta-actions">
           <button
-            *ngIf="!isOwner && !hasApplied"
+            *ngIf="canApply"
             class="btn btn-primary btn-lg apply-header-btn"
             (click)="openApplyModal()">
             <i class="fa-solid fa-paper-plane"></i> Apply Now
@@ -147,15 +147,24 @@
             </li>
           </ul>
 
-          <div class="sidebar-apply-btn mt-4">
+          <div class="sidebar-apply-btn mt-4" *ngIf="canApply || hasApplied || isOwner">
             <button
-              *ngIf="!isOwner && !hasApplied"
+              *ngIf="canApply"
               class="btn btn-primary btn-block btn-lg"
               (click)="openApplyModal()">
               <i class="fa-solid fa-paper-plane"></i> Apply for this position
             </button>
             <div *ngIf="hasApplied" class="alert alert-success text-center mb-0">
               <i class="fa-solid fa-check"></i> Application Submitted!
+            </div>
+            <!-- Quick actions for job owner or admin in sidebar -->
+            <div *ngIf="isOwner" class="d-flex flex-column gap-2">
+              <a [routerLink]="['/jobs', job._id || job.id, 'applications']" class="btn btn-primary btn-block">
+                <i class="fa-solid fa-users"></i> View Applicants
+              </a>
+              <a [routerLink]="['/jobs', job._id || job.id, 'edit']" class="btn btn-outline btn-block">
+                <i class="fa-regular fa-pen-to-square"></i> Edit Listing
+              </a>
             </div>
           </div>
         </div>
@@ -186,7 +195,7 @@
 </div>
 
 <!-- Application Modal Dialog -->
-<div class="modal-backdrop" *ngIf="isApplyModalOpen" (click)="closeApplyModal()">
+<div class="modal-backdrop" *ngIf="isApplyModalOpen && canApply" (click)="closeApplyModal()">
   <div class="modal-dialog application-modal-dialog" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <div>

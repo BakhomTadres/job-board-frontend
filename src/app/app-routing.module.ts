@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
 import { NonAuthGuard } from './core/guards/non-auth.guard';
+import { HasJobCreditGuard } from './core/guards/has-job-credit.guard';
 
 // Components
 import { HomeComponent } from './pages/home/home.component';
@@ -37,7 +38,7 @@ const routes: Routes = [
   {
     path: 'jobs/create',
     component: CreateJobComponent,
-    canActivate: [AuthGuard, RoleGuard],
+    canActivate: [AuthGuard, RoleGuard, HasJobCreditGuard],
     data: { roles: ['employer', 'admin'] }
   },
   {

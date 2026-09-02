@@ -2,6 +2,7 @@
   border-radius: var(--radius-xl);
   max-width: 580px;
   margin: 0 auto;
+  padding: 40px;
 }
 
 .status-icon-circle {
@@ -67,4 +68,14 @@
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
+}
+
+.pulse-hover {
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  transition: all 0.25s ease-in-out;
+}
+
+.pulse-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(79, 70, 229, 0.45);
 }
