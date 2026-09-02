@@ -70,7 +70,6 @@ export class MyApplicationsComponent implements OnInit {
     return typeof job === 'object' ? (job._id || job.id) : job;
   }
 
-<<<<<<< Updated upstream
   // بيرجع الـ id بتاع الـ application نفسه (مش الجوب)
   getAppId(app: any): string | null {
     if (!app) return null;
@@ -112,9 +111,7 @@ export class MyApplicationsComponent implements OnInit {
       }
     });
   }
-}
-=======
-  getMatchScore(app: Application): number {
+    getMatchScore(app: Application): number {
     const user = this.authService.currentUserValue;
     const job = app.jobId as any;
     if (user && user.skills && Array.isArray(user.skills) && job && typeof job === 'object' && job.skills && Array.isArray(job.skills) && job.skills.length > 0) {
@@ -126,4 +123,5 @@ export class MyApplicationsComponent implements OnInit {
     return app.matchScore ?? 0;
   }
 }
->>>>>>> Stashed changes
+
+
