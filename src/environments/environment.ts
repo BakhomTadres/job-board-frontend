@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'https://job-board-backend-sand.vercel.app/api'
 };
