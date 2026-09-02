@@ -12,6 +12,15 @@ export class ApplicationService {
 
   constructor(private http: HttpClient) {}
 
+  // يجيب كل الطلبات (Applications) - مخصص لصفحة الادمن
+  getAllApplications(params?: { limit?: number; page?: number; status?: ApplicationStatus }): Observable<ApplicationListResponse> {
+    return this.http.get<ApplicationListResponse>(`${this.apiUrl}/applications`, { params: params as any });
+  }
+
+  // بترجع نفس بيانات getAllApplications، متسابة عشان اي حد تاني بيستخدمها القديمة يفضل شغال
+  getApplicationsCount(): Observable<ApplicationListResponse> {
+    return this.getAllApplications({ limit: 1 });
+  }
   applyForJob(jobId: string, data: CreateApplicationDto): Observable<ApplicationResponse> {
     return this.http.post<ApplicationResponse>(`${this.apiUrl}/jobs/${jobId}/apply`, data);
   }

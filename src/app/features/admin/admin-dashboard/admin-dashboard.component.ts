@@ -4,7 +4,9 @@ import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Job } from '../../../core/models/job.model';
 import { User } from '../../../core/models/user.model';
-
+import { Application } from '../../../core/models/application.model';
+import { ApplicationService } from '../../../core/services/application.service';
+import { UserService } from '../../../core/services/user.service';
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.component.html',
@@ -12,15 +14,19 @@ import { User } from '../../../core/models/user.model';
 })
 export class AdminDashboardComponent implements OnInit {
   jobs: Job[] = [];
+  applications: Application[] = [];
   currentUser: User | null = null;
   isLoading = true;
   hasError = false;
 
   totalJobsCount = 0;
-  totalApplicationsEstimate = 0;
+  totalApplicationsCount = 0;
+  totalUsersCount = 0;
 
   constructor(
     private jobService: JobService,
+    private applicationService: ApplicationService,
+    private userService: UserService,
     private authService: AuthService,
     private toast: ToastService
   ) {}
@@ -38,12 +44,30 @@ export class AdminDashboardComponent implements OnInit {
       next: (res) => {
         this.jobs = res.data || [];
         this.totalJobsCount = res.results || this.jobs.length;
-        this.totalApplicationsEstimate = this.jobs.length * 3 + 12;
         this.isLoading = false;
       },
       error: () => {
         this.hasError = true;
         this.isLoading = false;
+      }
+    });
+
+    this.applicationService.getAllApplications({ limit: 100 }).subscribe({
+      next: (res) => {
+        this.applications = res.data || [];
+        this.totalApplicationsCount = res.data.length ?? this.applications.length;
+      },
+      error: () => {
+        this.toast.error('Load Failed', 'Could not load applications.');
+      }
+    });
+
+    this.userService.getAllUsers({ limit: 1 }).subscribe({
+      next: (res) => {
+        this.totalUsersCount = res.results ?? (res.data ? res.data.length : 0);
+      },
+      error: () => {
+        this.toast.error('Load Failed', 'Could not load users count.');
       }
     });
   }
