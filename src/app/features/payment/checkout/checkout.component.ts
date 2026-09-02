@@ -30,43 +30,46 @@ export class CheckoutComponent implements OnInit {
       price: 49,
       currency: 'EGP',
       period: 'per post',
-      description: 'Perfect for small teams and startups hiring for a single open role.',
+      description: 'Ideal for small teams and startups hiring for a single open role.',
       features: [
-        '30-Day Job Listing Visibility',
-        'Automated Skill Match Scoring',
+        '1 Active Job Post Credit',
         'Direct Candidate Applications',
+        'Automated Skill Match Scoring',
+        'Applicant Profiles & Details Access',
         'Standard Email Support'
       ]
     },
     {
-      id: 'featured',
-      name: 'Featured Employer',
+      id: 'weekly',
+      name: 'Weekly Hiring Pass',
       price: 129,
       currency: 'EGP',
-      period: 'per post',
+      period: 'per week',
       popular: true,
-      description: 'Maximize candidate reach with top-of-list highlighting and badge.',
+      description: 'Unlimited job posts for 7 days. Ideal for fast-track hiring sprints.',
       features: [
-        'Highlighted on Homepage & Top of Search',
-        '60-Day Job Listing Duration',
-        'Priority Skill Match Scoring',
-        'Dedicated Candidate Management Portal',
-        'Priority 24/7 Support'
+        'Unlimited Job Posts for 7 Days',
+        'Direct Candidate Applications',
+        'Automated Skill Match Scoring',
+        'Manage, Edit & Close Listings Anytime',
+        'Complete Applicant Details Review',
+        'Standard Email Support'
       ]
     },
     {
       id: 'unlimited',
-      name: 'Unlimited Team Pro',
+      name: 'Monthly Unlimited Pro',
       price: 349,
       currency: 'EGP',
       period: 'per month',
-      description: 'Ideal for scaling engineering departments and recruitment agencies.',
+      description: 'Complete hiring power for growing companies and active recruitment.',
       features: [
-        'Unlimited Active Job Posts',
-        'Company Branding Page & Logo',
-        'AI Match Score Filtering & Export',
-        'Instant Candidate Resume Downloads',
-        'Dedicated Account Manager'
+        'Unlimited Job Posts for 30 Days',
+        'Direct Candidate Applications',
+        'Automated Skill Match Scoring',
+        'Manage, Edit & Close Listings Anytime',
+        'Complete Applicant History Access',
+        'Priority Email & Platform Support'
       ]
     }
   ];
@@ -84,7 +87,7 @@ export class CheckoutComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private toast: ToastService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.currentUser = this.authService.currentUserValue;
@@ -108,6 +111,11 @@ export class CheckoutComponent implements OnInit {
     if (planParam) {
       const match = this.plans.find(p => p.id === planParam);
       if (match) this.selectedPlan = match;
+    }
+
+    const reasonParam = this.route.snapshot.queryParams['reason'];
+    if (reasonParam === 'credits_required') {
+      this.toast.info('Job Credits Required', 'Please choose a package to start posting job openings.');
     }
   }
 
@@ -135,6 +143,7 @@ export class CheckoutComponent implements OnInit {
     const redirectionUrl = `${window.location.origin}/payment/success`;
 
     const payload = {
+      planId: this.selectedPlan.id,
       amount: this.selectedPlan.price,
       currency: this.selectedPlan.currency,
       billingData: this.billingForm.value,

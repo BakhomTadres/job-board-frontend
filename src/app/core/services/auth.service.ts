@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap, catchError, of, map } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { User, AuthResponse, RegisterRequest, LoginRequest, UpdateProfileRequest, UserRole } from '../models/user.model';
+import { User, AuthResponse, RegisterRequest, LoginRequest, UpdateProfileRequest, UserRole, Subscription, JobPostingEligibility } from '../models/user.model';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -155,6 +155,32 @@ export class AuthService {
 
   getUserById(id: string): Observable<{ status: string; user: User }> {
     return this.http.get<{ status: string; user: User }>(`${this.apiUrl}/${id}`);
+  }
+
+  checkJobPostingEligibility(): Observable<JobPostingEligibility> {
+    return this.http.get<JobPostingEligibility>(`${this.apiUrl}/job-posting-eligibility`).pipe(
+      tap(res => {
+        if (res && this.currentUserValue) {
+          const updatedUser: User = {
+            ...this.currentUserValue,
+            jobCredits: res.jobCredits,
+            subscription: res.subscription
+          };
+          this.setUser(updatedUser);
+        }
+      })
+    );
+  }
+
+  updateUserCredits(credits: number, subscription?: Subscription): void {
+    if (this.currentUserValue) {
+      const updatedUser: User = {
+        ...this.currentUserValue,
+        jobCredits: credits,
+        ...(subscription ? { subscription } : {})
+      };
+      this.setUser(updatedUser);
+    }
   }
 
   public loadUserProfile(): void {

@@ -16,6 +16,7 @@ export interface BillingData {
 export interface CreateCheckoutDto {
   amount: number;
   currency?: string;
+  planId?: string;
   billingData?: BillingData;
   items?: Array<{ name: string; amount_cents: number; description?: string; quantity: number }>;
   paymentMethods?: number[];
@@ -27,6 +28,7 @@ export interface CheckoutResponse {
   message?: string;
   data: {
     paymentId: string;
+    planId?: string;
     intentionId: string;
     clientSecret: string;
     checkoutUrl: string;
@@ -40,6 +42,8 @@ export interface CheckoutResponse {
 export interface PaymentRecord {
   _id: string;
   userId: string;
+  planId?: string;
+  isProcessed?: boolean;
   paymobIntentionId?: string;
   paymobOrderId?: string | number;
   paymobTransactionId?: string | number;

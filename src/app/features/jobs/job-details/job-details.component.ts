@@ -114,6 +114,11 @@ export class JobDetailsComponent implements OnInit {
   }
 
   openApplyModal(): void {
+    if (this.isEmployerOrAdmin) {
+      this.toast.warning('Not Allowed', 'Employers and administrators cannot apply to jobs.');
+      return;
+    }
+
     if (!this.authService.isLoggedIn()) {
       this.toast.info('Sign In Required', 'Please log in to apply for this job.');
       this.router.navigate(['/auth/login'], {
@@ -187,6 +192,18 @@ export class JobDetailsComponent implements OnInit {
     if (this.currentUser.role === 'admin') return true;
     const employerId = typeof this.job.employer === 'object' ? this.job.employer?._id : this.job.employer;
     return employerId === (this.currentUser._id || this.currentUser.id);
+  }
+
+  get isEmployerOrAdmin(): boolean {
+    const role = this.currentUser?.role;
+    return role === 'employer' || role === 'admin';
+  }
+
+  get canApply(): boolean {
+    if (this.isEmployerOrAdmin) return false;
+    if (this.isOwner) return false;
+    if (this.hasApplied) return false;
+    return true;
   }
 
   getSalaryFormatted(salary?: number): string {
